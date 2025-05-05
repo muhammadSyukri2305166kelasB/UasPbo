@@ -10,4 +10,5 @@
         <maven.compiler.release>23</maven.compiler.release>
         <exec.mainClass>com.syukri.uaspbo.UasPbo</exec.mainClass>
     </properties>
+    
 </project>
