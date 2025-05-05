@@ -3,12 +3,18 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.syukri.uaspbo;
+import java.util.Random;
 
 /**
  *
  * @author HP
  */
-public class Item {
-//    absbahdgiajsb
-//    ahgajhsdfajdhfgajdshfbj
+public abstract class Moves {
+    String name;
+
+    public Moves(String name) {
+        this.name = name;
+    }
+
+    public abstract void execute(Monster self, Monster target);
 }
