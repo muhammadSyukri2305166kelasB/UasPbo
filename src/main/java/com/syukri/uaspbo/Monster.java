@@ -13,18 +13,23 @@ import java.util.Random;
 class Monster {
     String name;
     int level;
+    int maxHp;
     int hp;
     int attack;
     int defense;
+    int speed = 2;
     Moves[] moves;
+    String element = "none";
 
-    public Monster(String name, int level, int hp, int attack, int defense, Moves[] moves) {
+    public Monster(String name, int level, int hp, int attack, int defense, Moves[] moves, String element) {
         this.name = name;
         this.level = level;
+        this.maxHp = hp;
         this.hp = hp;
         this.attack = attack;
         this.defense = defense;
         this.moves = moves;
+        this.element = element;
     }
 
     public boolean isAlive() {
@@ -42,5 +47,12 @@ class Monster {
 
     public void useMoves(int index, Monster target) {
         moves[index].execute(this, target);
+    }
+    
+    public void resetAfterBattle() {
+        this.hp = this.maxHp;
+        for (int i = 0; i < this.moves.length; i++) {
+            this.moves[i].isUsable = true;
+        }
     }
 }

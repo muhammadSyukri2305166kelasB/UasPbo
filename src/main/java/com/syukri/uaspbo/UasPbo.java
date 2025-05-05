@@ -13,61 +13,30 @@ public class UasPbo {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        Moves punch = new Attack("Punch");
-        Moves claw = new Attack("Claw");
-        Moves heal = new Heal("Recover", 8);
+        Moves kick = new Attack("Kick", 4, "none");
+        Moves claw = new Attack("Claw", 6, "none");
+        Moves flamingArrow = new Attack("Flaming Arrow", 6, "fire");
+        Moves firePunch = new Attack("Fire Punch", 4, "fire");
+        Moves crashingWave = new Attack("Crashing Wave", 6, "water");
+        Moves waterGun = new Attack("Water Gun", 4, "water");
+        Moves growThorn = new Attack("Grow Thorn", 4, "plant");
+        Moves thousandLeavesHurricane = new Attack("Thousand Leaves Hurricane", 8, "plant");
+        
+        Moves lickWounds = new Heal("Lick Wounds", 6);
+        Moves calmingWater = new Heal("Calming Water", 8);
+        Moves cauterize = new Heal("Cauterize", 4);
+        
+        
+        Moves[] embercubMovess = { kick, claw, firePunch };
+        Monster embercub = new Monster("Embercub", 3, 42, 12, 8, embercubMovess, "fire");
 
-        // Embercub (Player)
-        Moves[] embercubMovess = { punch, claw, null };
-        Monster embercub = new Monster("Embercub", 3, 30, 12, 8, embercubMovess);
+        Moves[] droplettMovess = { waterGun, calmingWater};
+        Monster droplett = new Monster("Droplett", 3, 30, 10, 10, droplettMovess, "water");
 
-        // Droplett (AI)
-        Moves[] droplettMovess = { punch, heal, null };
-        Monster droplett = new Monster("Droplett", 3, 28, 10, 10, droplettMovess);
-
-        int round = 1;
-        while (embercub.isAlive() && droplett.isAlive()) {
-            System.out.println("\n---- Round " + round + " ----");
-            System.out.println("Your HP: " + embercub.hp + " | Enemy HP: " + droplett.hp);
-            System.out.println("Choose your Moves:");
-
-            // List available Movess
-            for (int i = 0; i < embercub.moves.length - 1; i++) {
-                System.out.println(i + ": " + embercub.moves[i].name);
-            }
-
-            int choice = -1;
-            while (choice < 0 || choice >= embercub.moves.length) {
-                System.out.print("Enter Moves number: ");
-                if (scanner.hasNextInt()) {
-                    choice = scanner.nextInt();
-                } else {
-                    scanner.next(); // consume invalid input
-                }
-            }
-
-            // Player's turn
-            embercub.useMoves(choice, droplett);
-            if (!droplett.isAlive()) break;
-
-            // Droplett's turn (basic AI)
-            if (droplett.hp < 15) {
-                droplett.useMoves(1, droplett); // Heal
-            } else {
-                droplett.useMoves(0, embercub); // Punch
-            }
-
-            round++;
-        }
-
-        System.out.println("\nBattle Over!");
-        if (embercub.isAlive()) {
-            System.out.println("🔥 " + embercub.name + " wins!");
-        } else if (droplett.isAlive()) {
-            System.out.println("💧 " + droplett.name + " wins!");
-        } else {
-            System.out.println("It's a draw!");
-        }
+        Moves[] jethornMovess = { growThorn, thousandLeavesHurricane, kick };
+        Monster jethorn = new Monster("Jethorn", 3, 42, 14, 6, jethornMovess, "plant");
+        
+        Battle.PlayerVsWild(jethorn, embercub);
 
         scanner.close();
     }

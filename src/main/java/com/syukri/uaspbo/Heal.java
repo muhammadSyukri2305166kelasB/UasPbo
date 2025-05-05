@@ -9,15 +9,16 @@ package com.syukri.uaspbo;
  * @author HP
  */
 public class Heal extends Moves {
-    int healAmount;
+    int diceSide;
 
-    public Heal(String name, int healAmount) {
+    public Heal(String name, int diceSide) {
         super(name);
-        this.healAmount = healAmount;
+        this.diceSide = diceSide;
     }
 
     @Override
     public void execute(Monster self, Monster target) {
+        int healAmount = self.rollDice(Math.ceilDiv(self.level, 2), diceSide);
         self.hp += healAmount;
         System.out.println(self.name + " uses " + name + " and heals for " + healAmount + " HP! (HP: " + self.hp + ")");
     }

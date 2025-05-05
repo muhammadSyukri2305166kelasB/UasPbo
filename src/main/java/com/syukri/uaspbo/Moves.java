@@ -11,6 +11,7 @@ import java.util.Random;
  */
 public abstract class Moves {
     String name;
+    boolean isUsable = true;
 
     public Moves(String name) {
         this.name = name;
