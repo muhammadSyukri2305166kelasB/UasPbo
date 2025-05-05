@@ -11,3 +11,6 @@ package com.syukri.uaspbo;
 public class Monster {
     
 }
+
+
+
