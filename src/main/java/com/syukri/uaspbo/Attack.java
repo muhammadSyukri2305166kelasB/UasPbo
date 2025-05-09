@@ -11,36 +11,34 @@ package com.syukri.uaspbo;
 import java.util.Random;
 
 public class Attack extends Moves {
-    int diceSide = 1;
-    String element = "none";
+    private String element = "none";
     
     public Attack(String name, int diceSide, String element) {
-        super(name);
-        this.diceSide = diceSide;
+        super(name, diceSide);
         this.element = element;
     }
 
     @Override
     public void execute(Monster self, Monster target) {
-        int diceSum = self.rollDice(self.level, this.diceSide);
-        double ratio = (double) self.attack / target.defense;
+        int diceSum = self.rollDice(self.getLevel(), this.getDiceSide());
+        double ratio = (double) self.getAttack() / target.getDefense();
         double mult = 1.0;
         
-        if (this.element.equals(self.element) && !this.element.equals("none")) {
+        if (this.element.equals(self.getElement()) && !this.element.equals("none")) {
             mult += 0.2;
         }
         
-        if (self.element.equals("water") && target.element.equals("fire") ||
-            self.element.equals("fire") && target.element.equals("plant") ||
-            self.element.equals("plant") && target.element.equals("water"))
+        if (self.getElement().equals("water") && target.getElement().equals("fire") ||
+            self.getElement().equals("fire") && target.getElement().equals("plant") ||
+            self.getElement().equals("plant") && target.getElement().equals("water"))
         {
             mult += 0.3;
-        } else if (!self.element.equals(target.element)) {
+        } else if (!self.getElement().equals(target.getElement())) {
             mult -= 0.3;
         }
         
         int damage = (int) Math.round(diceSum * ratio * mult);
-        target.hp -= damage;
+        target.setHp(target.getHp() - damage);
         
         String effectiveness;
         
@@ -54,15 +52,25 @@ public class Attack extends Moves {
             effectiveness = "very effective";
         }
         
-        if (this.diceSide >= 8 && damage >= (this.diceSide+1)*self.level/2 * ratio * mult) {
-            this.isUsable = false;
+        if (this.getDiceSide() >= 8 && damage >= (this.getDiceSide()+1)*self.getLevel()/2 * ratio * mult) {
+            this.setIsUsable(false);
         }
         
-        System.out.println(self.name + " uses " + this.name + " on " + target.name + " for " + damage + " damage! (" + target.name + " HP: " + target.hp + ")");
-        if (!isUsable) {
-            System.out.println(self.name + " went all out to deal massive damage! " + this.name + " becomes unusable until the end of this battle");
+        System.out.println(self.getName() + " uses " + this.getName() + " on " + target.getName() + " for " + damage + " damage! (" + target.getName() + " HP: " + target.getHp() + ")");
+        if (!this.isIsUsable()) {
+            System.out.println(self.getName() + " went all out to deal massive damage! " + this.getName() + " becomes unusable until the end of this battle");
         } else {
             System.out.println("It was " + effectiveness + "!");
         }
     }
+
+    public String getElement() {
+        return element;
+    }
+
+//    public void setElement(String element) {
+//        this.element = element;
+//    }
+    
+    
 }

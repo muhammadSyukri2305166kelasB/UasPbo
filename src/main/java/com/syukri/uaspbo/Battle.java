@@ -19,13 +19,13 @@ public class Battle {
         
         while (player.isAlive() && wild.isAlive()) {
             System.out.println("\n---- Round " + round + " ----");
-            System.out.println("Your HP: " + player.hp + "/" + player.maxHp + " | "
-                             + "Enemy HP: " + wild.hp + "/" + wild.maxHp);
+            System.out.println("Your HP: " + player.getHp() + "/" + player.getMaxHp() + " | "
+                             + "Enemy HP: " + wild.getHp() + "/" + wild.getMaxHp());
             
-            if (wild.speed > player.speed && round == 1) {
+            if (wild.getSpeed() > player.getSpeed() && round == 1) {
                 // wild's turn (basic random AI)
-                int wildMoveIndex = rand.nextInt(wild.moves.length - 1);
-                if (wild.moves[wildMoveIndex] instanceof Heal) {
+                int wildMoveIndex = rand.nextInt(wild.getMoves().length - 1);
+                if (wild.getMoves()[wildMoveIndex] instanceof Heal) {
                     wild.useMoves(wildMoveIndex, wild); // Heal
                 } else {
                     wild.useMoves(wildMoveIndex, player); // Punch
@@ -35,15 +35,15 @@ public class Battle {
             // Player's turn
             System.out.println("Choose your Moves:");
             // List available Moves
-            for (int i = 0; i < player.moves.length; i++) {
-                if (!player.moves[i].isUsable) {
+            for (int i = 0; i < player.getMoves().length; i++) {
+                if (!player.getMoves()[i].isIsUsable()) {
                     continue;
                 }
-                System.out.println(i + ": " + player.moves[i].name);
+                System.out.println(i + ": " + player.getMoves()[i].getName());
             }
 
             int choice = -1;
-            while (choice < 0 || choice >= player.moves.length) {
+            while (choice < 0 || choice >= player.getMoves().length) {
                 System.out.print("Enter Moves number: ");
                 if (scanner.hasNextInt()) {
                     choice = scanner.nextInt();
@@ -55,27 +55,27 @@ public class Battle {
             player.useMoves(choice, wild);
             if (!wild.isAlive()) break;
             
-            if (wild.speed > player.speed) {
+            if (wild.getSpeed() > player.getSpeed()) {
                 round++;
             }
             
-            int wildMoveIndex = rand.nextInt(wild.moves.length - 1);
-            if (wild.moves[wildMoveIndex] instanceof Heal) {
+            int wildMoveIndex = rand.nextInt(wild.getMoves().length - 1);
+            if (wild.getMoves()[wildMoveIndex] instanceof Heal) {
                 wild.useMoves(wildMoveIndex, wild); // Heal
             } else {
                 wild.useMoves(wildMoveIndex, player); // Punch
             }
 
-            if (wild.speed <= player.speed) {
+            if (wild.getSpeed() <= player.getSpeed()) {
                 round++;
             }
         }
         
         System.out.println("\nBattle Over!");
         if (player.isAlive()) {
-            System.out.println(player.name + " wins!");
+            System.out.println(player.getName() + " wins!");
         } else if (wild.isAlive()) {
-            System.out.println(wild.name + " wins!");
+            System.out.println(wild.getName() + " wins!");
         } else {
             System.out.println("It's a draw!");
         }
@@ -85,4 +85,6 @@ public class Battle {
         
         scanner.close();
     }
+    
+    
 }
