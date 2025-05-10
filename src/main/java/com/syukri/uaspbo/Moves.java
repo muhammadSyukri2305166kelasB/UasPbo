@@ -13,7 +13,7 @@ public abstract class Moves {
     private String name;
     private String desc = "defaultDescription";
     private int diceSide;
-    private boolean isUsable = true;
+    private String element = "none";
 
     public Moves(String name, int diceSide) {
         this.name = name;
@@ -36,15 +36,14 @@ public abstract class Moves {
         this.desc = desc;
     }
 
-    public boolean isIsUsable() {
-        return isUsable;
+    public String getElement() {
+        return element;
     }
 
-    public void setIsUsable(boolean isUsable) {
-        this.isUsable = isUsable;
+    public void setElement(String element) {
+        this.element = element;
     }
     
-
     public abstract void execute(Monster self, Monster target);
 
     public int getDiceSide() {
@@ -54,4 +53,16 @@ public abstract class Moves {
     public void setDiceSide(int diceSide) {
         this.diceSide = diceSide;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Moves{");
+        sb.append("\nNama Gerakan=").append(name);
+        sb.append(", \nDeskripsi=").append(desc);
+        sb.append(", \nSisi Dadu=").append(diceSide);
+        sb.append("\n}");
+        return sb.toString();
+    }
+
 }

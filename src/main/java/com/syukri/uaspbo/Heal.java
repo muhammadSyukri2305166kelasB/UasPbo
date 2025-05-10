@@ -22,13 +22,13 @@ public class Heal extends Moves {
 
     @Override
     public void execute(Monster self, Monster target) {
-        int healAmount = self.rollDice(Math.ceilDiv(self.getLevel(), 2), this.getDiceSide());
+        int healAmount = DiceRoller.rollDice(Math.ceilDiv(self.getLevel(), 2), this.getDiceSide());
         self.setHp(self.getHp() + healAmount);
         
         if (!canOverHeal && self.getHp() > self.getMaxHp()) {
             self.setHp(self.getMaxHp());
         }
-        System.out.println(self.getName() + " uses " + this.getName() + " and heals for " + healAmount + " HP! (HP: " + self.getHp() + ")");
+        System.out.println(self.getName() + " melakukan " + this.getName() + " untuk menyembuhkan  " + healAmount + " HP! (HP: " + (self.getHp()-healAmount) + "+" + healAmount + ")");
     }
 
     public boolean isCanOverHeal() {
@@ -38,6 +38,17 @@ public class Heal extends Moves {
     public void setCanOverHeal(boolean canOverHeal) {
         this.canOverHeal = canOverHeal;
     }
-    
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(super.toString());
+        sb.append("\n  Heal{");
+        if (canOverHeal) {
+            sb.append("\n  Bisa Overheal= Hasil Heal dari gerakan ini bisa menyebabkan hp Monster melebihi batas maxHp Monster");
+        }
+        sb.append("\n  }\n");
+        return sb.toString();
+    }
     
 }

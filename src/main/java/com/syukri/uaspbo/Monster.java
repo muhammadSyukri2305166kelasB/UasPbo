@@ -8,38 +8,56 @@ package com.syukri.uaspbo;
  *
  * @author HP
  */
-import java.util.Random;
+import java.util.List;
+import java.util.ArrayList;
 
-class Monster {
+public abstract class Monster {
     private String name;
     private int level;
     private int maxHp;
     private int hp;
     private int attack;
     private int defense;
-    private int speed = 2;
-    private Moves[] moves;
-    private String element;
+    private int speed;
+    private ArrayList<Moves> moves;
+    private String element; // element adalah variabel konstanta/tidak bisa diubah
 
-    public Monster(String name, int level, int maxHp, int hp, int attack, int defense, Moves[] moves) {
+    // konstruktor
+
+    public Monster(String name, int level) {
+        // random attribute
+        this.name = name;
+        this.level = level;
+        this.maxHp = DiceRoller.rollTotalKeepHighest(2+this.level, 10, this.level); // roll 4d8, ambil 1 terbesar
+        this.hp = this.maxHp;
+        this.attack = DiceRoller.rollTotalKeepHighest(2+this.level, 3, this.level);
+        this.defense = DiceRoller.rollTotalKeepLowest(2+this.level, 3, this.level);
+        this.speed = DiceRoller.rollDice(1, 10); // roll 1 d10
+        this.moves = new ArrayList<>(); // masih kosong, akan diisi di class konkret
+        this.element = "none";
+    }
+    
+    public Monster(String name, int level, int maxHp, int attack, int defense,int speed, ArrayList<Moves> moves) {
         this.name = name;
         this.level = level;
         this.maxHp = maxHp;
-        this.hp = hp;
+        this.hp = maxHp;
         this.attack = attack;
         this.defense = defense;
-        this.moves = moves;
+        this.speed = speed;
+        this.moves = new ArrayList<>(moves);
         this.element = "none";
     }
 
-    public Monster(String name, int level, int hp, int attack, int defense, Moves[] moves, String element) {
+    public Monster(String name, int level, int maxHp, int attack, int defense, int speed, ArrayList<Moves> moves, String element) {
         this.name = name;
         this.level = level;
-        this.maxHp = hp;
-        this.hp = hp;
+        this.maxHp = maxHp;
+        this.hp = maxHp;
         this.attack = attack;
         this.defense = defense;
-        this.moves = moves;
+        this.speed = speed;
+        this.moves = new ArrayList<>(moves);
         this.element = element;
     }
 
@@ -47,26 +65,20 @@ class Monster {
         return this.hp > 0;
     }
 
-    public int rollDice(int numDice, int sides) {
-        Random rand = new Random();
-        int total = 0;
-        for (int i = 0; i < numDice; i++) {
-            total += rand.nextInt(sides) + 1;
-        }
-        return total;
-    }
-
     public void useMoves(int index, Monster target) {
-        moves[index].execute(this, target);
+        moves.get(index).execute(this, target);
     }
     
     public void resetAfterBattle() {
         this.hp = this.maxHp;
-        for (int i = 0; i < this.moves.length; i++) {
-            this.moves[i].setIsUsable(true);
+        for (int i = 0; i < this.moves.size(); i++) {
+            if (this.getMoves().get(i) instanceof Attack) {
+                ((Attack)this.getMoves().get(i)).setIsUsable(true);
+            }
         }
     }
 
+    // getter dan setter
     public String getName() {
         return name;
     }
@@ -95,7 +107,7 @@ class Monster {
         return speed;
     }
 
-    public Moves[] getMoves() {
+    public ArrayList<Moves> getMoves() {
         return moves;
     }
 
@@ -107,8 +119,17 @@ class Monster {
         this.name = name;
     }
 
-    public void setLevel(int level) {
-        this.level = level;
+//    tidak bisa sembarangan atur level, tapi bisa level up
+//    public void setLevel(int level) {
+//        this.level = level;
+//    }
+    
+    public void levelUp(){
+        this.level++;
+        this.maxHp += DiceRoller.rollTotalKeepHighest(2, 10, 1);
+        this.hp = this.maxHp;
+        this.attack += DiceRoller.rollTotalKeepLowest(2, 3, 1);
+        this.defense += DiceRoller.rollTotalKeepHighest(2, 3, 1);
     }
 
     public void setMaxHp(int maxHp) {
@@ -131,13 +152,41 @@ class Monster {
         this.speed = speed;
     }
 
-    public void setMoves(Moves[] moves) {
-        this.moves = moves;
+    public void setMoves(ArrayList<Moves> moves) {
+        this.moves = (moves == null) ? new ArrayList<>() : new ArrayList<>(moves);
+    }
+    // selain bisa "menimpa" list moves, bisa juga hanya menambah atau menghilangkan
+    public void addMoves(Moves moves) {
+        this.moves.add(moves);
     }
 
-    public void setElement(String element) {
+//    element tidak bisa diubah
+    protected void setElement(String element) {
         this.element = element;
     }
-    
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Monster{");
+        sb.append("\nname=").append(name);
+        sb.append(", \nlevel=").append(level);
+        sb.append(", \nmaxHp=").append(maxHp);
+        sb.append(", \nhp=").append(hp);
+        sb.append(", \nattack=").append(attack);
+        sb.append(", \ndefense=").append(defense);
+        sb.append(", \nspeed=").append(speed);
+        sb.append(", \nmoves=[");
+        for (int i = 0; i < moves.size(); i++) {
+            sb.append(moves.get(i).getName());
+            if (i < moves.size() - 1) {
+                sb.append(", ");
+            }
+        }
+        sb.append("]");
+        sb.append(", \nelement=").append(element);
+        sb.append("\n}");
+        return sb.toString();
+    }
     
 }
