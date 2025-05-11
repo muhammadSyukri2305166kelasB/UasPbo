@@ -24,11 +24,10 @@ public class Heal extends Moves {
     public void execute(Monster self, Monster target) {
         int healAmount = DiceRoller.rollDice(Math.ceilDiv(self.getLevel(), 2), this.getDiceSide());
         self.setHp(self.getHp() + healAmount);
-        
+        System.out.println(self.getName() + " melakukan " + this.getName() + " untuk menyembuhkan  " + healAmount + " HP! (HP: " + (self.getHp()-healAmount) + "+" + healAmount + ")");
         if (!canOverHeal && self.getHp() > self.getMaxHp()) {
             self.setHp(self.getMaxHp());
         }
-        System.out.println(self.getName() + " melakukan " + this.getName() + " untuk menyembuhkan  " + healAmount + " HP! (HP: " + (self.getHp()-healAmount) + "+" + healAmount + ")");
     }
 
     public boolean isCanOverHeal() {

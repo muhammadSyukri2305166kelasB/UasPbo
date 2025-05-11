@@ -28,10 +28,10 @@ public abstract class Monster {
         // basic attribute
         this.name = name;
         this.level = level;
-        this.maxHp = 30 + level * 2;
+        this.maxHp = 30 + level * 2; // 30 + rollDice(level, 3)
         this.hp = this.maxHp;
-        this.attack = 8 + Math.round(level * 1.5f);
-        this.defense = 6 + level;
+        this.attack = 8 + Math.round(level * 1.5f); // 8 + rollDice(level, 2)
+        this.defense = 6 + level; // 6 + (rollDice(level, 3) / 2)
         this.speed = DiceRoller.rollDice(1, 10); // roll 1 d10
         this.moves = new ArrayList<>(); // masih kosong, akan diisi di class konkret
         this.element = "none";

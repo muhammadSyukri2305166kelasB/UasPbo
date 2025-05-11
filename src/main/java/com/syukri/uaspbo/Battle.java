@@ -47,8 +47,8 @@ public class Battle {
                 System.out.println("Pilih Gerakan:");
 //                List available Moves
                 for (int i = 0; i < player.getMoves().size(); i++) {
-                    if (player.getMoves().get(i) instanceof Attack) {
-                        if (!((Attack)player.getMoves().get(i)).isIsUsable()) {
+                    if (player.getMoves().get(i) instanceof Attack attack) { // instanceof pattern
+                        if (!attack.isIsUsable()) {
                             continue;
                         }
                     }
