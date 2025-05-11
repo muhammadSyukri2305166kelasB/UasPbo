@@ -25,13 +25,13 @@ public abstract class Monster {
     // konstruktor
 
     public Monster(String name, int level) {
-        // random attribute
+        // basic attribute
         this.name = name;
         this.level = level;
-        this.maxHp = DiceRoller.rollTotalKeepHighest(2+this.level, 10, this.level); // roll 4d8, ambil 1 terbesar
+        this.maxHp = 30 + level * 2;
         this.hp = this.maxHp;
-        this.attack = DiceRoller.rollTotalKeepHighest(2+this.level, 3, this.level);
-        this.defense = DiceRoller.rollTotalKeepLowest(2+this.level, 3, this.level);
+        this.attack = 8 + Math.round(level * 1.5f);
+        this.defense = 6 + level;
         this.speed = DiceRoller.rollDice(1, 10); // roll 1 d10
         this.moves = new ArrayList<>(); // masih kosong, akan diisi di class konkret
         this.element = "none";
@@ -126,10 +126,10 @@ public abstract class Monster {
     
     public void levelUp(){
         this.level++;
-        this.maxHp += DiceRoller.rollTotalKeepHighest(2, 10, 1);
+        this.maxHp += DiceRoller.rollDice(1, 3); //1, 2, atau 3
         this.hp = this.maxHp;
-        this.attack += DiceRoller.rollTotalKeepLowest(2, 3, 1);
-        this.defense += DiceRoller.rollTotalKeepHighest(2, 3, 1);
+        this.attack += DiceRoller.rollDice(1, 2);
+        this.defense ++;
     }
 
     public void setMaxHp(int maxHp) {
