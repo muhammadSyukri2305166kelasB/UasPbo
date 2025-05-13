@@ -63,7 +63,6 @@ public class Explore {
         while (true) {
             Location loc = locations.get(currentLocation);
             loc.view.run();
-            ;
             loc.describe();
             List<Option> menu = new ArrayList<>(loc.getOptions());
 
