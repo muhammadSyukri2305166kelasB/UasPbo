@@ -5,7 +5,7 @@
 package com.syukri.uaspbo;
 
 import java.util.Scanner;
-import com.syukri.uaspbo.menu.MainMenu;
+import com.syukri.uaspbo.menu.Explore;
 
 /**
  *
@@ -15,7 +15,7 @@ import com.syukri.uaspbo.menu.MainMenu;
 public class UasPbo {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        MainMenu.MainMenu1();
+        Explore.init();
         scanner.close();
     }
 }

@@ -8,7 +8,6 @@ package com.syukri.uaspbo;
  *
  * @author HP
  */
-import java.util.List;
 import java.util.ArrayList;
 
 public abstract class Monster {
