@@ -4,27 +4,28 @@
  */
 package com.syukri.uaspbo;
 
+import java.io.Serializable;
+
 /**
  *
  * @author HP
  */
 
-public class Attack extends Moves {
+public class Attack extends Moves implements Serializable{
     private boolean isUsable = true;
-    private final int baseDamage;
+    int averageDamage = (this.getBaseValue() + this.getDiceSide() + 1)/2; // dikali level
     // damage = (roll(level, 4) + baseDamage*level)/2
     
     public Attack(String name, int baseDamage, int diceSide, String element) {
-        super(name, diceSide);
+        super(name, diceSide, baseDamage);
         this.setElement(element);
-        this.baseDamage = baseDamage;
     }
 
     @Override
     public void execute(Monster self, Monster target) {
         // damage = (roll(level, 4) + baseDamage*level)/2
         double diceSum = DiceRoller.rollDice(self.getLevel(), this.getDiceSide());
-        double damage = (this.baseDamage*self.getLevel() + diceSum)/2;
+        double damage = (this.getBaseValue()*self.getLevel() + diceSum)/2;
         double ratio = (double)self.getAttack() / (double)target.getDefense();
         double mult = 1.0; // elemen
         
@@ -67,9 +68,8 @@ public class Attack extends Moves {
         StringBuilder sb = new StringBuilder();
         sb.append("Attack{");
         sb.append("isUsable=").append(isUsable);
-        sb.append(", baseDamage=").append(baseDamage);
         sb.append('}');
         return sb.toString();
     }
-    
+
 }

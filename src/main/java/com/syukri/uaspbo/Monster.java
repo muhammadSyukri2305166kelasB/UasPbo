@@ -8,9 +8,10 @@ package com.syukri.uaspbo;
  *
  * @author HP
  */
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public abstract class Monster {
+public abstract class Monster implements Serializable {
     private String name;
     private int level;
     private int maxHp;

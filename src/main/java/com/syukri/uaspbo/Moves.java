@@ -4,19 +4,23 @@
  */
 package com.syukri.uaspbo;
 
+import java.io.Serializable;
+
 /**
  *
  * @author HP
  */
-public abstract class Moves {
+public abstract class Moves implements Serializable{
     private String name;
     private String desc = "defaultDescription";
+    private int baseValue;
     private int diceSide;
     private String element = "none";
 
-    public Moves(String name, int diceSide) {
+    public Moves(String name, int diceSide, int baseValue) {
         this.name = name;
         this.diceSide = diceSide;
+        this.baseValue = baseValue;
     }
 
     public String getName() {
@@ -43,8 +47,14 @@ public abstract class Moves {
         this.element = element;
     }
     
-    public abstract void execute(Monster self, Monster target);
+    public int getBaseValue() {
+        return baseValue;
+    }
 
+    public void setBaseValue(int baseValue) {
+        this.baseValue = baseValue;
+    }
+    
     public int getDiceSide() {
         return diceSide;
     }
@@ -53,12 +63,15 @@ public abstract class Moves {
         this.diceSide = diceSide;
     }
 
+    public abstract void execute(Monster self, Monster target);
+    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Moves{");
         sb.append("name=").append(name);
         sb.append(", desc=").append(desc);
+        sb.append(", baseValue=").append(baseValue);
         sb.append(", diceSide=").append(diceSide);
         sb.append(", element=").append(element);
         sb.append('}');

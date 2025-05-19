@@ -3,6 +3,7 @@
  * Click banyakDadubfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.syukri.uaspbo;
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -10,7 +11,7 @@ import java.util.*;
  * @author HP
  */
 
-public class DiceRoller {
+public class DiceRoller implements Serializable{
     public static int rollDice(int banyakDadu, int sisiDadu) {
         Random rand = new Random();
         int total = 0;
