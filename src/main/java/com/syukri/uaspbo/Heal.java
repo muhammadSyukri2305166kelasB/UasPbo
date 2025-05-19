@@ -10,19 +10,22 @@ package com.syukri.uaspbo;
  */
 public class Heal extends Moves {
     private boolean canOverHeal = false;
+    private final int baseHeal;
 
-    public Heal(String name, int diceSide) {
+    public Heal(String name, int diceSide, int baseHeal) {
         super(name, diceSide);
+        this.baseHeal = baseHeal;
     }
     
-    public Heal(String name, int diceSide, boolean canOverHeal) {
+    public Heal(String name, int diceSide, boolean canOverHeal, int baseHeal) {
         super(name, diceSide);
+        this.baseHeal = baseHeal;
         this.canOverHeal = canOverHeal; // apakah bisa overheal atau tidak
     }
 
     @Override
     public void execute(Monster self, Monster target) {
-        int healAmount = DiceRoller.rollDice(Math.ceilDiv(self.getLevel(), 2), this.getDiceSide());
+        int healAmount = self.getLevel()/2*this.getBaseHeal() + DiceRoller.rollDice(Math.ceilDiv(self.getLevel(), 2), this.getDiceSide());
         self.setHp(self.getHp() + healAmount);
         System.out.println(self.getName() + " melakukan " + this.getName() + " untuk menyembuhkan  " + healAmount + " HP! (HP: " + (self.getHp()-healAmount) + "+" + healAmount + ")");
         if (!canOverHeal && self.getHp() > self.getMaxHp()) {
@@ -33,6 +36,10 @@ public class Heal extends Moves {
     public boolean isCanOverHeal() {
         return canOverHeal;
     }
+    
+    public int getBaseHeal() {
+        return baseHeal;
+    }
 
     public void setCanOverHeal(boolean canOverHeal) {
         this.canOverHeal = canOverHeal;
@@ -41,12 +48,10 @@ public class Heal extends Moves {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(super.toString());
-        sb.append("\n  Heal{");
-        if (canOverHeal) {
-            sb.append("\n  Bisa Overheal= Hasil Heal dari gerakan ini bisa menyebabkan hp Monster melebihi batas maxHp Monster");
-        }
-        sb.append("\n  }\n");
+        sb.append("Heal{");
+        sb.append("canOverHeal=").append(canOverHeal);
+        sb.append(", baseHeal=").append(baseHeal);
+        sb.append('}');
         return sb.toString();
     }
     

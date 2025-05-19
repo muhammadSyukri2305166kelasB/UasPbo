@@ -15,7 +15,10 @@ import com.syukri.uaspbo.menu.Explore;
 public class UasPbo {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Explore.init();
+//        Explore.init();
+        Battle.ExampleBattle(scanner, 1);
+        Battle.ExampleBattle(scanner, 5);
+        Battle.ExampleBattle(scanner, 10);
         scanner.close();
     }
 }

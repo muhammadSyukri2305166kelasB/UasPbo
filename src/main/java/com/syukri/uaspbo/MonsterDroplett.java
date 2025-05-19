@@ -20,8 +20,8 @@ public class MonsterDroplett extends Monster{
         this.setHp(this.getMaxHp());
         
         // default moves untuk Droplett
-        Moves waterGun = new Attack("Water Gun", 1, 4, "water");
-        Moves calmingWater = new Heal("Calming Water", 8);
+        Moves waterGun = new Attack("Water Gun", 8, 4, "water");
+        Moves calmingWater = new Heal("Calming Water", 4, 8);
         
         this.addMoves(waterGun);
         this.addMoves(calmingWater);

@@ -20,9 +20,9 @@ public class MonsterEmbercub extends Monster {
         this.setHp(this.getMaxHp());
         
         // default moves untuk Embercub
-        Moves kick = new Attack("Kick", 1, 4, "none");
-        Moves claw = new Attack("Claw", 2, 4, "none");
-        Moves firePunch = new Attack("Fire Punch", 1, 6, "fire");
+        Moves kick = new Attack("Kick", 6, 6, "none");
+        Moves claw = new Attack("Claw", 8, 4, "none");
+        Moves firePunch = new Attack("Fire Punch", 8, 4, "fire");
         
         this.addMoves(kick);
         this.addMoves(claw);

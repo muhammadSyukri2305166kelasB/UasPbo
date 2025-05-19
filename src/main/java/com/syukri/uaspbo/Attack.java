@@ -23,8 +23,8 @@ public class Attack extends Moves {
     @Override
     public void execute(Monster self, Monster target) {
         // damage = (roll(level, 4) + baseDamage*level)/2
-        int diceSum = DiceRoller.rollDice(self.getLevel(), this.getDiceSide());
-        int damage = (this.baseDamage*self.getLevel() + diceSum)/2;
+        double diceSum = DiceRoller.rollDice(self.getLevel(), this.getDiceSide());
+        double damage = (this.baseDamage*self.getLevel() + diceSum)/2;
         double ratio = (double)self.getAttack() / (double)target.getDefense();
         double mult = 1.0; // elemen
         
@@ -38,11 +38,11 @@ public class Attack extends Moves {
         {
             mult += 0.1; // karena elemen gerakan ini unggul terhadap elemen monster lawan
         } else if (!this.getElement().equals("none") && !this.getElement().equals(target.getElement())) {
-            mult -= 0.1; // karena elemen gerakan ini lemah terhadap elemen monster lawan
+            mult -= 0.2; // karena elemen gerakan ini lemah terhadap elemen monster lawan
         }
         
-        damage = (int) Math.round(damage * ratio * mult);
-        target.setHp(target.getHp() - damage);
+        damage = Math.round(damage * ratio * mult);
+        target.setHp(target.getHp() - (int) damage);
         
         if (this.getDiceSide() >= 8 && diceSum >= (this.getDiceSide()+1)*self.getLevel()/2) {
             this.setIsUsable(false);
@@ -65,13 +65,10 @@ public class Attack extends Moves {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(super.toString());
-        sb.append("\n  Attack{");
-        sb.append("\n  element=").append(this.getElement());
-        if (this.getDiceSide() >=8) {
-            sb.append(", \n  Habis Terpakai= Monster mungkin mengerahkan seluruh kemampuannya untuk serangan ini (hasil roll dadu lebih dari average), sehingga gerakan ini tidak bisa dipakai lagi. Akan bisa dipakai lagi di Battle selanjutnya");
-        }
-        sb.append("\n  }\n");
+        sb.append("Attack{");
+        sb.append("isUsable=").append(isUsable);
+        sb.append(", baseDamage=").append(baseDamage);
+        sb.append('}');
         return sb.toString();
     }
     

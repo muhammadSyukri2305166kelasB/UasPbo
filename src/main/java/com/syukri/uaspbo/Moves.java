@@ -57,10 +57,11 @@ public abstract class Moves {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Moves{");
-        sb.append("\nNama Gerakan=").append(name);
-        sb.append(", \nDeskripsi=").append(desc);
-        sb.append(", \nSisi Dadu=").append(diceSide);
-        sb.append("\n}");
+        sb.append("name=").append(name);
+        sb.append(", desc=").append(desc);
+        sb.append(", diceSide=").append(diceSide);
+        sb.append(", element=").append(element);
+        sb.append('}');
         return sb.toString();
     }
 

@@ -12,8 +12,7 @@ import java.util.Random;
  * @author HP
  */
 public class Battle {
-    public static void PlayerVsWild (Monster player, Monster wild) {
-        Scanner scanner = new Scanner(System.in);
+    public static void PlayerVsWild (Monster player, Monster wild, Scanner scanner) {
         Random rand = new Random();
         int round = 1;
         
@@ -30,7 +29,82 @@ public class Battle {
             System.out.println("Your HP: " + player.getHp() + "/" + player.getMaxHp() + " | "
                              + "Enemy HP: " + wild.getHp() + "/" + wild.getMaxHp());
             
-            if (wild.getSpeed() > player.getSpeed() && round == 1) {
+            if (wild.getSpeed() > player.getSpeed()) {
+                // wild's turn (basic random AI)
+                int wildMoveIndex = rand.nextInt(wild.getMoves().size());
+                if (wild.getMoves().get(wildMoveIndex) instanceof Heal) {
+                    wild.useMoves(wildMoveIndex, wild); // Heal
+                } else {
+                    wild.useMoves(wildMoveIndex, player); // Punch
+                }
+                waitAndClear();
+                
+                if (!(player.isAlive() && wild.isAlive())) break;
+                
+                // Player's turn
+                int choice = -1;
+                while (choice < 0 || choice >= player.getMoves().size()) {
+                    System.out.println("Pilih Gerakan:");
+    //                List available Moves
+                    for (int i = 0; i < player.getMoves().size(); i++) {
+                        if (player.getMoves().get(i) instanceof Attack attack) { // instanceof pattern
+                            if (!attack.isIsUsable()) {
+                                continue;
+                            }
+                        }
+                        System.out.println(i + ": " + player.getMoves().get(i).getName());
+                    }
+                    System.out.print("Masukkan nomor gerakan: ");
+                    if (scanner.hasNextInt()) {
+                        choice = scanner.nextInt();
+                        scanner.nextLine();
+                        System.out.println(player.getMoves().get(choice).toString());
+                        System.out.println("Apakah Anda yakin? (y/t)");
+                        String confirm = scanner.nextLine().trim();
+
+                        if (confirm.equalsIgnoreCase("t")) {
+                            choice = -1; // ulangi input
+                        }
+                    } else {
+                        scanner.next(); // consume invalid input
+                    }
+                    player.useMoves(choice, wild);
+                    waitAndClear();
+                }
+            } else {
+                // Player's turn
+                int choice = -1;
+                while (choice < 0 || choice >= player.getMoves().size()) {
+                    System.out.println("Pilih Gerakan:");
+    //                List available Moves
+                    for (int i = 0; i < player.getMoves().size(); i++) {
+                        if (player.getMoves().get(i) instanceof Attack attack) { // instanceof pattern
+                            if (!attack.isIsUsable()) {
+                                continue;
+                            }
+                        }
+                        System.out.println(i + ": " + player.getMoves().get(i).getName());
+                    }
+                    System.out.print("Masukkan nomor gerakan: ");
+                    if (scanner.hasNextInt()) {
+                        choice = scanner.nextInt();
+                        scanner.nextLine();
+                        System.out.println(player.getMoves().get(choice).toString());
+                        System.out.println("Apakah Anda yakin? (y/t)");
+                        String confirm = scanner.nextLine().trim();
+
+                        if (confirm.equalsIgnoreCase("t")) {
+                            choice = -1; // ulangi input
+                        }
+                    } else {
+                        scanner.next(); // consume invalid input
+                    }
+                    player.useMoves(choice, wild);
+                    waitAndClear();
+                }
+                
+                if (!(player.isAlive() && wild.isAlive())) break;
+                
                 // wild's turn (basic random AI)
                 int wildMoveIndex = rand.nextInt(wild.getMoves().size() - 1);
                 if (wild.getMoves().get(wildMoveIndex) instanceof Heal) {
@@ -38,57 +112,10 @@ public class Battle {
                 } else {
                     wild.useMoves(wildMoveIndex, player); // Punch
                 }
-            }
-            waitAndClear();
-            
-            // Player's turn
-            int choice = -1;
-            while (choice < 0 || choice >= player.getMoves().size()) {
-                System.out.println("Pilih Gerakan:");
-//                List available Moves
-                for (int i = 0; i < player.getMoves().size(); i++) {
-                    if (player.getMoves().get(i) instanceof Attack attack) { // instanceof pattern
-                        if (!attack.isIsUsable()) {
-                            continue;
-                        }
-                    }
-                    System.out.println(i + ": " + player.getMoves().get(i).getName());
-                }
-                System.out.print("Masukkan nomor gerakan: ");
-                if (scanner.hasNextInt()) {
-                    choice = scanner.nextInt();
-                    scanner.nextLine();
-                    System.out.println(player.getMoves().get(choice).toString());
-                    System.out.println("Apakah Anda yakin? (y/t)");
-                    String confirm = scanner.nextLine().trim();
-                    
-                    if (confirm.equalsIgnoreCase("t")) {
-                        choice = -1; // ulangi input
-                    }
-                } else {
-                    scanner.next(); // consume invalid input
-                }
-            }
-
-            player.useMoves(choice, wild);
-            waitAndClear();
-            if (!wild.isAlive()) break;
-            
-            if (wild.getSpeed() > player.getSpeed()) {
-                round++;
+                waitAndClear();
             }
             
-            int wildMoveIndex = rand.nextInt(wild.getMoves().size() - 1);
-            if (wild.getMoves().get(wildMoveIndex) instanceof Heal) {
-                wild.useMoves(wildMoveIndex, wild); // Heal
-            } else {
-                wild.useMoves(wildMoveIndex, player); // Punch
-            }
-            waitAndClear();
-
-            if (wild.getSpeed() <= player.getSpeed()) {
-                round++;
-            }
+            round++;
         }
         
         System.out.println("\nBattle Over!");
@@ -103,8 +130,6 @@ public class Battle {
         
         player.resetAfterBattle();
         wild.resetAfterBattle();
-        
-        scanner.close();
     }
     
 //    tidak bisa dilakukan di netbeans
@@ -121,4 +146,10 @@ public class Battle {
 //        scanner.close(); // jangan di close
     }
 
+    public static void ExampleBattle (Scanner scanner, int level) {
+        Monster embercub1 = new MonsterEmbercub("Syukri", level);
+        Monster droplett1 = new MonsterDroplett("Fajari", level);
+        
+        PlayerVsWild(embercub1, droplett1, scanner);
+    }
 }

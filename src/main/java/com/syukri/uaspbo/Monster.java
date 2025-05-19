@@ -27,7 +27,7 @@ public abstract class Monster {
         // basic attribute
         this.name = name;
         this.level = level;
-        this.maxHp = 30 + level * 2; // 30 + rollDice(level, 3)
+        this.maxHp = 10 + level * 21; // 10 + rollDice(6 * level, 6)
         this.hp = this.maxHp;
         this.attack = 8 + Math.round(level * 1.5f); // 8 + rollDice(level, 2)
         this.defense = 6 + level; // 6 + (rollDice(level, 3) / 2)
@@ -168,14 +168,14 @@ public abstract class Monster {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Monster{");
-        sb.append("\nname=").append(name);
-        sb.append(", \nlevel=").append(level);
-        sb.append(", \nmaxHp=").append(maxHp);
-        sb.append(", \nhp=").append(hp);
-        sb.append(", \nattack=").append(attack);
-        sb.append(", \ndefense=").append(defense);
-        sb.append(", \nspeed=").append(speed);
-        sb.append(", \nmoves=[");
+        sb.append("name=").append(name);
+        sb.append(", level=").append(level);
+        sb.append(", maxHp=").append(maxHp);
+        sb.append(", hp=").append(hp);
+        sb.append(", attack=").append(attack);
+        sb.append(", defense=").append(defense);
+        sb.append(", speed=").append(speed);
+        sb.append(", moves=[");
         for (int i = 0; i < moves.size(); i++) {
             sb.append(moves.get(i).getName());
             if (i < moves.size() - 1) {
@@ -183,9 +183,9 @@ public abstract class Monster {
             }
         }
         sb.append("]");
-        sb.append(", \nelement=").append(element);
-        sb.append("\n}");
+        sb.append(", element=").append(element);
+        sb.append('}');
         return sb.toString();
     }
-    
+
 }
