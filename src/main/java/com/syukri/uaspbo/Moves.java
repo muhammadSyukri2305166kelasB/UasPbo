@@ -12,7 +12,7 @@ import java.io.Serializable;
  */
 public abstract class Moves implements Serializable{
     private String name;
-    private String desc = "defaultDescription";
+    private String desc = "default Moves Description";
     private int baseValue;
     private int diceSide;
     private String element = "none";
@@ -64,7 +64,13 @@ public abstract class Moves implements Serializable{
     }
 
     public abstract void execute(Monster self, Monster target);
-    
+    public String view(){
+        StringBuilder sb = new StringBuilder();
+        sb.append(name).append(" : \n\t").append(desc);
+        sb.append("\n\tElement \t: ").append(element);
+        sb.append("\n\tDamage dasar \t: ").append(baseValue);
+        return sb.toString();
+    }
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

@@ -5,6 +5,10 @@
 package com.syukri.uaspbo;
 
 import java.util.Scanner;
+
+import com.syukri.uaspbo.pokemons.WaterMizumon;
+import com.syukri.uaspbo.pokemons.WaterSamequill;
+
 import java.util.Random;
 
 /**
@@ -147,8 +151,8 @@ public class Battle {
     }
 
     public static void ExampleBattle (Scanner scanner, int level) {
-        Monster embercub1 = new MonsterEmbercub("Syukri", level);
-        Monster droplett1 = new MonsterDroplett("Fajari", level);
+        Monster embercub1 = new WaterSamequill("Syukri", level);
+        Monster droplett1 = new WaterMizumon("Fajari", level);
         
         PlayerVsWild(embercub1, droplett1, scanner);
     }

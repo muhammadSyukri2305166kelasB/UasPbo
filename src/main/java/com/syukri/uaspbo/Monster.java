@@ -11,8 +11,11 @@ package com.syukri.uaspbo;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import com.syukri.uaspbo.pokemons.MonsterViewer;
+
 public abstract class Monster implements Serializable {
     private String name;
+    private String Description = "Default Monster Description";
     private int level;
     private int maxHp;
     private int hp;
@@ -21,10 +24,12 @@ public abstract class Monster implements Serializable {
     private int speed;
     private ArrayList<Moves> moves;
     private String element; // element adalah variabel konstanta/tidak bisa diubah
+    private String ViewSource; // doksli gambar pixel nya
+    private int spawnRarity;
 
     // konstruktor
 
-    public Monster(String name, int level) {
+    public Monster(String name, int level, String ViewSource, int spawnRarity) {
         // basic attribute
         this.name = name;
         this.level = level;
@@ -35,9 +40,11 @@ public abstract class Monster implements Serializable {
         this.speed = DiceRoller.rollDice(1, 10); // roll 1 d10
         this.moves = new ArrayList<>(); // masih kosong, akan diisi di class konkret
         this.element = "none";
+        this.ViewSource = ViewSource;
+        this.spawnRarity = spawnRarity;
     }
-    
-    public Monster(String name, int level, int maxHp, int attack, int defense,int speed, ArrayList<Moves> moves) {
+
+    public Monster(String name, int level, int maxHp, int attack, int defense, int speed, ArrayList<Moves> moves, String ViewSource, int spawnRarity) {
         this.name = name;
         this.level = level;
         this.maxHp = maxHp;
@@ -47,9 +54,12 @@ public abstract class Monster implements Serializable {
         this.speed = speed;
         this.moves = new ArrayList<>(moves);
         this.element = "none";
+        this.ViewSource = ViewSource;
+        this.spawnRarity = spawnRarity;
     }
 
-    public Monster(String name, int level, int maxHp, int attack, int defense, int speed, ArrayList<Moves> moves, String element) {
+    public Monster(String name, int level, int maxHp, int attack, int defense, int speed, ArrayList<Moves> moves,
+            String element, String ViewSource, int spawnRarity) {
         this.name = name;
         this.level = level;
         this.maxHp = maxHp;
@@ -59,6 +69,8 @@ public abstract class Monster implements Serializable {
         this.speed = speed;
         this.moves = new ArrayList<>(moves);
         this.element = element;
+        this.ViewSource = ViewSource;
+        this.spawnRarity = spawnRarity;
     }
 
     public boolean isAlive() {
@@ -68,12 +80,12 @@ public abstract class Monster implements Serializable {
     public void useMoves(int index, Monster target) {
         moves.get(index).execute(this, target);
     }
-    
+
     public void resetAfterBattle() {
         this.hp = this.maxHp;
         for (int i = 0; i < this.moves.size(); i++) {
             if (this.getMoves().get(i) instanceof Attack) {
-                ((Attack)this.getMoves().get(i)).setIsUsable(true);
+                ((Attack) this.getMoves().get(i)).setIsUsable(true);
             }
         }
     }
@@ -115,21 +127,29 @@ public abstract class Monster implements Serializable {
         return element;
     }
 
+    public String getViewSource() {
+        return ViewSource;
+    }
+
+    public String getDescription() {
+        return Description;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
 
-//    tidak bisa sembarangan atur level, tapi bisa level up
-//    public void setLevel(int level) {
-//        this.level = level;
-//    }
-    
-    public void levelUp(){
+    // tidak bisa sembarangan atur level, tapi bisa level up
+    // public void setLevel(int level) {
+    // this.level = level;
+    // }
+
+    public void levelUp() {
         this.level++;
-        this.maxHp += DiceRoller.rollDice(1, 3); //1, 2, atau 3
+        this.maxHp += DiceRoller.rollDice(1, 3); // 1, 2, atau 3
         this.hp = this.maxHp;
         this.attack += DiceRoller.rollDice(1, 2);
-        this.defense ++;
+        this.defense++;
     }
 
     public void setMaxHp(int maxHp) {
@@ -155,14 +175,47 @@ public abstract class Monster implements Serializable {
     public void setMoves(ArrayList<Moves> moves) {
         this.moves = (moves == null) ? new ArrayList<>() : new ArrayList<>(moves);
     }
+
     // selain bisa "menimpa" list moves, bisa juga hanya menambah atau menghilangkan
     public void addMoves(Moves moves) {
         this.moves.add(moves);
     }
 
-//    element tidak bisa diubah
+    // element tidak bisa diubah
     protected void setElement(String element) {
         this.element = element;
+    }
+
+    public void setViewSource(String viewSource) {
+        ViewSource = viewSource;
+    }
+
+    public void setDescription(String description) {
+        Description = description;
+    }
+
+    public int getSpawnRarity() {
+        return spawnRarity;
+    }
+
+    public void view() {
+        try {
+            MonsterViewer.CharacterSelectionView(this.ViewSource);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        System.out.printf("%s : %s\n", getName(), getDescription());
+        System.out.println("Rarity \t\t: " + getSpawnRarity() + "%");
+        System.out.println("Level \t\t: " + getLevel());
+        System.out.println("Hp \t\t: " + getMaxHp());
+        System.out.println("Attack \t\t: " + getAttack());
+        System.out.println("Defense \t: " + getDefense());
+        System.out.println("Element \t: " + getElement());
+        System.out.println("Speed \t\t: " + getSpeed());
+        System.out.println("Moves \t\t: ");
+        for (int i = 0; i < getMoves().size(); i++) {
+            System.out.println("[" + i + "] " + getMoves().get(i).view());
+        }
     }
 
     @Override

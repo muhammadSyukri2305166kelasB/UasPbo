@@ -2,6 +2,8 @@ package com.syukri.uaspbo.menu;
 
 import java.util.*;
 
+import com.syukri.uaspbo.Monster;
+
 class Option {
     String description;
     Runnable action;
@@ -21,6 +23,7 @@ class Location implements Interactable {
     Runnable view;
     String description;
     List<Option> interactionOptions; // untuk inject kode saat runtime
+    Monster monster;
 
     public Location(String name, String description, Runnable view, List<Option> interactionOptions) {
         this.name = name;
@@ -59,6 +62,12 @@ public class Explore {
         currentLocation = start;
     }
 
+    void lawanMonster() {
+        System.out.println("kamu melawan monster " + locations.get(currentLocation).monster);
+        locations.get(currentLocation).monster = null;
+        System.out.println(">> Kamu mendapatkan uang dan exp ");
+    }
+
     public void run() {
         while (true) {
             Location loc = locations.get(currentLocation);
@@ -66,6 +75,10 @@ public class Explore {
             loc.describe();
             List<Option> menu = new ArrayList<>(loc.getOptions());
 
+            if (locations.get(currentLocation).monster != null){
+                menu.add(new Option("Lawan Monster", ()->lawanMonster()));
+            }
+            
             for (String neighbor : graph.get(currentLocation)) {
                 menu.add(new Option("Pergi ke " + neighbor, () -> {
                     currentLocation = neighbor;
@@ -100,32 +113,36 @@ public class Explore {
         }
     }
 
+    static void tidur(Explore map) {
+        System.out.println(">> Kamu beristirahat ");
+        map.locations.get("Gurun pasir").monster = MonsterSpawner.getMonster("fire");
+        map.locations.get("Sungai").monster = MonsterSpawner.getMonster("water");
+        map.locations.get("Hutan").monster = MonsterSpawner.getMonster("plant");
+        map.locations.get("Pegunungan").monster = MonsterSpawner.getMonster("none");
+    }
+
     public static void init() {
         Explore map = new Explore();
-        
+
         map.addlocation("Main menu", "Selamat datang di kerenmon", View::MainMenu, Arrays.asList(
                 new Option("Credit", () -> System.out.println(">> Kamu masuk menu credit "))));
         map.addlocation("Rumah", "Tempat tinggal mu", View::Home, Arrays.asList(
-                new Option("Istirahat", () -> System.out.println(">> Kamu beristirahat ")),
+                new Option("Istirahat", () -> tidur(map)),
                 new Option("Ascend Pokemon", () -> System.out.println(">> Kamu masuk menu ascend "))));
         map.addlocation("Toko", "Penuhi kebutuhan Pokemon mu", View::Home, Arrays.asList(
                 new Option("Jual", () -> System.out.println(">> Kamu mendapatkan uang ")),
                 new Option("Belanja", () -> System.out.println(">> Kamu mendapatkan barang "))));
         map.addlocation("Gurun pasir", "Persiapkan bekal yang banyak, kamu tidak tahu apa yang ada di depan sana",
                 View::Dessert, Arrays.asList(
-                        new Option("Lawan monster", () -> System.out.println(">> Kamu mendapatkan uang dan exp ")),
                         new Option("Tangkap Pokemon", () -> System.out.println(">> Kamu mendapatkan Pokemon "))));
         map.addlocation("Sungai", "Persiapkan bekal yang banyak, kamu tidak tahu apa yang ada di depan sana",
                 View::River, Arrays.asList(
-                        new Option("Lawan monster", () -> System.out.println(">> Kamu mendapatkan uang dan exp ")),
                         new Option("Tangkap Pokemon", () -> System.out.println(">> Kamu mendapatkan Pokemon "))));
         map.addlocation("Hutan", "Persiapkan bekal yang banyak, kamu tidak tahu apa yang ada di depan sana",
                 View::Forest, Arrays.asList(
-                        new Option("Lawan monster", () -> System.out.println(">> Kamu mendapatkan uang dan exp ")),
                         new Option("Tangkap Pokemon", () -> System.out.println(">> Kamu mendapatkan Pokemon "))));
         map.addlocation("Pegunungan", "Persiapkan bekal yang banyak, kamu tidak tahu apa yang ada di depan sana",
                 View::Mountain, Arrays.asList(
-                        new Option("Lawan monster", () -> System.out.println(">> Kamu mendapatkan uang dan exp ")),
                         new Option("Tangkap Pokemon", () -> System.out.println(">> Kamu mendapatkan Pokemon "))));
 
         map.connecLocations("Rumah", "Main menu");
@@ -135,6 +152,7 @@ public class Explore {
         map.connecLocations("Rumah", "Hutan");
         map.connecLocations("Pegunungan", "Hutan");
         map.setStartLocation("Main menu");
+        tidur(map);
         map.run();
     }
 }

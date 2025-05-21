@@ -5,8 +5,11 @@
 package com.syukri.uaspbo;
 
 import java.util.ArrayList;
+
+import com.syukri.uaspbo.pokemons.WaterMizumon;
+import com.syukri.uaspbo.pokemons.WaterSamequill;
+
 import java.io.*;
-import java.util.Arrays;
 
 /**
  *
@@ -14,59 +17,61 @@ import java.util.Arrays;
  */
 public class PlayersMonsters {
     private ArrayList<Monster> PlayersMonsters;
-    
-    public static void saveGame(ArrayList<Monster> PlayersMonsters, String filename) {
+    private String filename = "abc.dat";
+
+    public PlayersMonsters() {
+        this.PlayersMonsters = new ArrayList<>();
+    }
+
+    public void Save() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
-            oos.writeObject(PlayersMonsters);
+            oos.writeObject(this.PlayersMonsters);
             System.out.println("Game saved");
         } catch (IOException e) {
             System.err.println("Failed to save game: " + e.getMessage());
         }
     }
-    
-    public static ArrayList<Monster> loadGame(String filename) {
+
+    @SuppressWarnings("unchecked")
+    public void Load() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
-            ArrayList<Monster> loaded = (ArrayList<Monster>) ois.readObject();
+            PlayersMonsters = (ArrayList<Monster>) ois.readObject();
             System.out.println("Game loaded");
-            return loaded;
         } catch (IOException | ClassNotFoundException e) {
             System.err.println("Failed to load game: " + e.getMessage());
-            return null;
         }
     }
-    
-    public static ArrayList<Monster> CreateNewList () {
-        ArrayList<Monster> newList = new ArrayList<>();
-        return newList;
-    }
-    
-    public static void ViewListOfMonsters (ArrayList<Monster> PlayersMonsters){
+
+    public void ViewListOfMonsters() {
         for (int i = 0; i < PlayersMonsters.size(); i++) {
-//            System.out.println(1+ ". " + PlayersMonsters.get(i).getName());
-            System.out.println(PlayersMonsters.get(i).toString());
+            System.out.println(i + 1 + ". " + PlayersMonsters.get(i));
         }
     }
-    
-    public void AddMonster (Monster newMonster) {
+
+    public ArrayList<Monster> getPlayersMonsters() {
+        return PlayersMonsters;
+    }
+
+    public void AddMonster(Monster newMonster) {
         this.PlayersMonsters.add(newMonster);
     }
-    
+
+    public void test() {
+        Monster monster1 = new WaterSamequill("Embercub1", 1);
+        Monster monster2 = new WaterSamequill("Embercub2", 2);
+        Monster monster3 = new WaterMizumon("Droplett1", 3);
+        Monster monster4 = new WaterMizumon("Droplett2", 4);
+        this.AddMonster(monster1);
+        this.AddMonster(monster2);
+        this.AddMonster(monster3);
+        this.AddMonster(monster4);
+        this.Save();
+    }
+
     public static void main(String[] args) {
-        ArrayList<Monster> myMonsters = CreateNewList();
-        Monster monster1 = new MonsterEmbercub("Embercub1", 1);
-        Monster monster2 = new MonsterEmbercub("Embercub2", 2);
-        Monster monster3 = new MonsterDroplett("Droplett1", 3);
-        Monster monster4 = new MonsterDroplett("Droplett2", 4);
-        
-        myMonsters.add(monster1);
-        myMonsters.add(monster2);
-        myMonsters.add(monster3);
-        myMonsters.add(monster4);
-        
-        ViewListOfMonsters(myMonsters);
-        saveGame(myMonsters, "abc.dat");
-        
-        ArrayList<Monster> myMonsters2 = loadGame("abc.dat");
-        ViewListOfMonsters(myMonsters2);
+        PlayersMonsters data = new PlayersMonsters();
+        data.test();
+        data.Load();
+        data.ViewListOfMonsters();
     }
 }
