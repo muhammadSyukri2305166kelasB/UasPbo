@@ -57,7 +57,7 @@ public class Explore {
         this.scanner = scanner;
     }
 
-    public void addlocation(String name, String description, Runnable view, List<Option> interactionOptions) {
+    public void addLocation(String name, String description, Runnable view, List<Option> interactionOptions) {
         locations.put(name, new Location(name, description, view, interactionOptions));
         graph.putIfAbsent(name, new ArrayList<>());
     }
@@ -75,7 +75,13 @@ public class Explore {
         System.out.println("kamu melawan monster " + locations.get(currentLocation).monster);
         Monster pickedMonster = MonsterSelector.pickMonster(myDeck, scanner);
         Monster wildMonster = locations.get(currentLocation).monster;
-        Battle.PlayerVsWild(pickedMonster, wildMonster, scanner);
+        boolean isWon = Battle.PlayerVsWild(pickedMonster, wildMonster, scanner, myDeck); //ini return boolean, kalah = false
+        // sesudah ini, panggil wait and clear jika ingin memberikan jeda player harus menekan enter
+        
+        if (isWon) {
+            locations.get(currentLocation).monster = null;
+        }
+        
         System.out.println(">> Kamu mendapatkan uang dan exp ");
         // TODO: sistem level up, exp dan uang?
     }
@@ -135,30 +141,30 @@ public class Explore {
 
     public static void init(Scanner scanner, PlayersMonsters myDeck) {
         Explore map = new Explore(scanner, myDeck);
-        map.addlocation("Main menu", "Selamat datang di kerenmon", View::MainMenu, Arrays.asList(
+        map.addLocation("Main menu", "Selamat datang di kerenmon", View::MainMenu, Arrays.asList(
                 new Option("Credit", () -> System.out.println(">> Kamu masuk menu credit "))));
 
-        map.addlocation("Rumah", "Tempat tinggal mu", View::Home, Arrays.asList(
+        map.addLocation("Rumah", "Tempat tinggal mu", View::Home, Arrays.asList(
                 new Option("Istirahat", () -> tidur(map)),
                 new Option("Ascend Pokemon", () -> System.out.println(">> Kamu masuk menu ascend "))));
 
-        map.addlocation("Toko", "Penuhi kebutuhan Pokemon mu", View::Home, Arrays.asList(
+        map.addLocation("Toko", "Penuhi kebutuhan Pokemon mu", View::Home, Arrays.asList(
                 new Option("Jual", () -> System.out.println(">> Kamu mendapatkan uang ")),
                 new Option("Belanja", () -> System.out.println(">> Kamu mendapatkan barang "))));
 
-        map.addlocation("Gurun pasir", "Persiapkan bekal yang banyak, kamu tidak tahu apa yang ada di depan sana",
+        map.addLocation("Gurun pasir", "Persiapkan bekal yang banyak, kamu tidak tahu apa yang ada di depan sana",
                 View::Dessert, Arrays.asList(
                         new Option("Tangkap Pokemon", () -> System.out.println(">> Kamu mendapatkan Pokemon "))));
 
-        map.addlocation("Sungai", "Persiapkan bekal yang banyak, kamu tidak tahu apa yang ada di depan sana",
+        map.addLocation("Sungai", "Persiapkan bekal yang banyak, kamu tidak tahu apa yang ada di depan sana",
                 View::River, Arrays.asList(
                         new Option("Tangkap Pokemon", () -> System.out.println(">> Kamu mendapatkan Pokemon "))));
 
-        map.addlocation("Hutan", "Persiapkan bekal yang banyak, kamu tidak tahu apa yang ada di depan sana",
+        map.addLocation("Hutan", "Persiapkan bekal yang banyak, kamu tidak tahu apa yang ada di depan sana",
                 View::Forest, Arrays.asList(
                         new Option("Tangkap Pokemon", () -> System.out.println(">> Kamu mendapatkan Pokemon "))));
 
-        map.addlocation("Pegunungan", "Persiapkan bekal yang banyak, kamu tidak tahu apa yang ada di depan sana",
+        map.addLocation("Pegunungan", "Persiapkan bekal yang banyak, kamu tidak tahu apa yang ada di depan sana",
                 View::Mountain, Arrays.asList(
                         new Option("Tangkap Pokemon", () -> System.out.println(">> Kamu mendapatkan Pokemon "))));
 

@@ -68,6 +68,7 @@ public class Attack extends Moves implements Serializable{
         StringBuilder sb = new StringBuilder();
         sb.append("Attack{");
         sb.append("isUsable=").append(isUsable);
+        sb.append(", averageDamage=").append(averageDamage);
         sb.append('}');
         return sb.toString();
     }

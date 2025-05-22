@@ -6,8 +6,7 @@ package com.syukri.uaspbo;
 
 import java.util.ArrayList;
 
-import com.syukri.uaspbo.pokemons.WaterMizumon;
-import com.syukri.uaspbo.pokemons.WaterSamequill;
+import com.syukri.uaspbo.pokemons.*;
 
 import java.io.*;
 
@@ -17,10 +16,11 @@ import java.io.*;
  */
 public class PlayersMonsters {
     private ArrayList<Monster> PlayersMonsters;
-    private String filename = "abc.dat";
+    private final String filename;
 
     public PlayersMonsters() {
         PlayersMonsters = new ArrayList<>();
+        filename = "abc.dat";
     }
 
     public void Save() {
@@ -54,13 +54,14 @@ public class PlayersMonsters {
 
     public void AddMonster(Monster newMonster) {
         this.PlayersMonsters.add(newMonster);
+        Save();
     }
 
     public void test() {
-        Monster monster1 = new WaterSamequill("Embercub1", 1);
-        Monster monster2 = new WaterSamequill("Embercub2", 2);
-        Monster monster3 = new WaterMizumon("Droplett1", 3);
-        Monster monster4 = new WaterMizumon("Droplett2", 4);
+        Monster monster1 = new WaterSamequill("Samequill1", 1);
+        Monster monster2 = new WaterSamequill("Samequill2", 2);
+        Monster monster3 = new WaterMizumon("Mizumon1", 3);
+        Monster monster4 = new WaterMizumon("Mizumon2", 4);
         AddMonster(monster1);
         AddMonster(monster2);
         AddMonster(monster3);
