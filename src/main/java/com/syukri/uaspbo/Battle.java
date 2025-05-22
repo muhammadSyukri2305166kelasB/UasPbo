@@ -6,6 +6,7 @@ package com.syukri.uaspbo;
 
 import java.util.Scanner;
 
+import com.syukri.uaspbo.pokemons.MonsterViewer;
 import com.syukri.uaspbo.pokemons.WaterMizumon;
 import com.syukri.uaspbo.pokemons.WaterSamequill;
 
@@ -16,23 +17,29 @@ import java.util.Random;
  * @author HP
  */
 public class Battle {
-    public static void PlayerVsWild (Monster player, Monster wild, Scanner scanner) {
+    public static void PlayerVsWild(Monster player, Monster wild, Scanner scanner) {
+        try {
+
+            MonsterViewer.BattleView(player.getViewSource(), wild.getViewSource());
+        } catch (Exception e) {
+            System.out.println("gagal menampilkan view");
+        }
         Random rand = new Random();
         int round = 1;
-        
+
         System.out.println("Monster player:");
         System.out.println(player.toString());
         System.out.println("---------------");
         System.out.println("Monster liar:");
         System.out.println(wild.toString());
-        
+
         waitAndClear();
-        
+
         while (player.isAlive() && wild.isAlive()) {
             System.out.println("\n---- Round " + round + " ----");
             System.out.println("Your HP: " + player.getHp() + "/" + player.getMaxHp() + " | "
-                             + "Enemy HP: " + wild.getHp() + "/" + wild.getMaxHp());
-            
+                    + "Enemy HP: " + wild.getHp() + "/" + wild.getMaxHp());
+
             if (wild.getSpeed() > player.getSpeed()) {
                 // wild's turn (basic random AI)
                 int wildMoveIndex = rand.nextInt(wild.getMoves().size());
@@ -42,14 +49,15 @@ public class Battle {
                     wild.useMoves(wildMoveIndex, player); // Punch
                 }
                 waitAndClear();
-                
-                if (!(player.isAlive() && wild.isAlive())) break;
-                
+
+                if (!(player.isAlive() && wild.isAlive()))
+                    break;
+
                 // Player's turn
                 int choice = -1;
                 while (choice < 0 || choice >= player.getMoves().size()) {
                     System.out.println("Pilih Gerakan:");
-    //                List available Moves
+                    // List available Moves
                     for (int i = 0; i < player.getMoves().size(); i++) {
                         if (player.getMoves().get(i) instanceof Attack attack) { // instanceof pattern
                             if (!attack.isIsUsable()) {
@@ -80,7 +88,7 @@ public class Battle {
                 int choice = -1;
                 while (choice < 0 || choice >= player.getMoves().size()) {
                     System.out.println("Pilih Gerakan:");
-    //                List available Moves
+                    // List available Moves
                     for (int i = 0; i < player.getMoves().size(); i++) {
                         if (player.getMoves().get(i) instanceof Attack attack) { // instanceof pattern
                             if (!attack.isIsUsable()) {
@@ -106,9 +114,10 @@ public class Battle {
                     player.useMoves(choice, wild);
                     waitAndClear();
                 }
-                
-                if (!(player.isAlive() && wild.isAlive())) break;
-                
+
+                if (!(player.isAlive() && wild.isAlive()))
+                    break;
+
                 // wild's turn (basic random AI)
                 int wildMoveIndex = rand.nextInt(wild.getMoves().size() - 1);
                 if (wild.getMoves().get(wildMoveIndex) instanceof Heal) {
@@ -118,10 +127,10 @@ public class Battle {
                 }
                 waitAndClear();
             }
-            
+
             round++;
         }
-        
+
         System.out.println("\nBattle Over!");
         if (player.isAlive()) {
             System.out.println(player.getName() + " wins!");
@@ -131,29 +140,29 @@ public class Battle {
             System.out.println("Draw!");
         }
         waitAndClear();
-        
+
         player.resetAfterBattle();
         wild.resetAfterBattle();
     }
-    
-//    tidak bisa dilakukan di netbeans
-//    private static void clearConsole() {
-//        System.out.print("\033[H\033[2J");
-//        System.out.flush();
-//    }
-    
+
+    // tidak bisa dilakukan di netbeans
+    // private static void clearConsole() {
+    // System.out.print("\033[H\033[2J");
+    // System.out.flush();
+    // }
+
     private static void waitAndClear() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Tekan Enter untuk melanjutkan...");
         scanner.nextLine();
-//        clearConsole();
-//        scanner.close(); // jangan di close
+        // clearConsole();
+        // scanner.close(); // jangan di close
     }
 
-    public static void ExampleBattle (Scanner scanner, int level) {
+    public static void ExampleBattle(Scanner scanner, int level) {
         Monster embercub1 = new WaterSamequill("Syukri", level);
         Monster droplett1 = new WaterMizumon("Fajari", level);
-        
+
         PlayerVsWild(embercub1, droplett1, scanner);
     }
 }

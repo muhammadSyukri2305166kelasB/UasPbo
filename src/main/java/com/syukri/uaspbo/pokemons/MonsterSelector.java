@@ -5,7 +5,7 @@ import java.util.Scanner;
 import com.syukri.uaspbo.Monster;
 import com.syukri.uaspbo.PlayersMonsters;
 
-public class CharacterSelection {
+public class MonsterSelector {
     public static void main(String[] args) {
         PlayersMonsters myDeck = new PlayersMonsters();
         myDeck.test();
@@ -19,6 +19,16 @@ public class CharacterSelection {
         Monster picked = myDeck.getPlayersMonsters().get(in.nextInt() - 1);
         picked.view();
         in.close();
+    }
+
+    public static Monster pickMonster(PlayersMonsters myDeck, Scanner in){
+        for (int i = 0; i < myDeck.getPlayersMonsters().size(); i++) {
+            Monster pokemon = myDeck.getPlayersMonsters().get(i);
+            System.out.printf("[%d] %s : %s\n", i + 1, pokemon.getName(), pokemon.getDescription());
+        }
+        System.out.print("Masukkan Kerenmon yang akan kamu pilih : ");
+        Monster picked = myDeck.getPlayersMonsters().get(in.nextInt() - 1);
+        return picked;
     }
 
     public ArrayList<Monster> all() {

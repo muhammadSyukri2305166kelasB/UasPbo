@@ -20,12 +20,12 @@ public class PlayersMonsters {
     private String filename = "abc.dat";
 
     public PlayersMonsters() {
-        this.PlayersMonsters = new ArrayList<>();
+        PlayersMonsters = new ArrayList<>();
     }
 
     public void Save() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
-            oos.writeObject(this.PlayersMonsters);
+            oos.writeObject(PlayersMonsters);
             System.out.println("Game saved");
         } catch (IOException e) {
             System.err.println("Failed to save game: " + e.getMessage());
@@ -61,11 +61,11 @@ public class PlayersMonsters {
         Monster monster2 = new WaterSamequill("Embercub2", 2);
         Monster monster3 = new WaterMizumon("Droplett1", 3);
         Monster monster4 = new WaterMizumon("Droplett2", 4);
-        this.AddMonster(monster1);
-        this.AddMonster(monster2);
-        this.AddMonster(monster3);
-        this.AddMonster(monster4);
-        this.Save();
+        AddMonster(monster1);
+        AddMonster(monster2);
+        AddMonster(monster3);
+        AddMonster(monster4);
+        Save();
     }
 
     public static void main(String[] args) {
