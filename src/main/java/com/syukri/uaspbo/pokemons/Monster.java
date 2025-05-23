@@ -2,16 +2,19 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.syukri.uaspbo;
+package com.syukri.uaspbo.pokemons;
 
 /**
  *
  * @author HP
  */
+import com.syukri.uaspbo.Attack;
+import com.syukri.uaspbo.DiceRoller;
+import com.syukri.uaspbo.Moves;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import com.syukri.uaspbo.pokemons.MonsterViewer;
+//import com.syukri.uaspbo.pokemons.MonsterViewer;
 
 public abstract class Monster implements Serializable {
     private String name;
@@ -26,6 +29,7 @@ public abstract class Monster implements Serializable {
     private String element; // element adalah variabel konstanta/tidak bisa diubah
     private String ViewSource; // doksli gambar pixel nya
     private int spawnRarity;
+    private int exp = 0;
 
     // konstruktor
 
@@ -139,19 +143,6 @@ public abstract class Monster implements Serializable {
         this.name = name;
     }
 
-    // tidak bisa sembarangan atur level, tapi bisa level up
-    // public void setLevel(int level) {
-    // this.level = level;
-    // }
-
-    public void levelUp() {
-        this.level++;
-        this.maxHp += DiceRoller.rollDice(1, 3); // 1, 2, atau 3
-        this.hp = this.maxHp;
-        this.attack += DiceRoller.rollDice(1, 2);
-        this.defense++;
-    }
-
     public void setMaxHp(int maxHp) {
         this.maxHp = maxHp;
     }
@@ -196,6 +187,37 @@ public abstract class Monster implements Serializable {
 
     public int getSpawnRarity() {
         return spawnRarity;
+    }
+    
+    public int getExp() {
+        return exp;
+    }
+
+    public void setExp(int exp) {
+        this.exp = exp;
+    }
+    
+    // tidak bisa sembarangan atur level, tapi bisa level up
+    // public void setLevel(int level) {
+    // this.level = level;
+    // }
+
+    public void levelUp () {
+        if (this.exp >= this.level * 20) {
+            //bisa level up
+            this.exp -= this.level * 20;
+            this.level++;
+            this.maxHp += DiceRoller.rollDice(6, 6); // average 21.5
+            this.hp = this.maxHp;
+            this.attack += DiceRoller.rollDice(1, 2);
+            this.defense += DiceRoller.rollDice(1, 3) / 2;
+            
+            System.out.println("Berhasil level up!");
+        } else {
+            System.out.printf("Exp belum cukup (%d / %d)\n", this.getExp(), this.getLevel() * 20);
+            System.out.println("Gagal level up!");
+        }
+        
     }
 
     public void view() {

@@ -4,6 +4,8 @@
  */
 package com.syukri.uaspbo;
 
+import com.syukri.uaspbo.pokemons.Monster;
+
 /**
  *
  * @author HP

@@ -1,7 +1,6 @@
 package com.syukri.uaspbo.pokemons;
 
 import java.util.ArrayList;
-import com.syukri.uaspbo.Monster;
 import com.syukri.uaspbo.Moves;
 import com.syukri.uaspbo.Attack;
 import com.syukri.uaspbo.Heal;

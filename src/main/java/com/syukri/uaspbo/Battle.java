@@ -4,6 +4,7 @@
  */
 package com.syukri.uaspbo;
 
+import com.syukri.uaspbo.pokemons.Monster;
 import java.util.Scanner;
 
 import com.syukri.uaspbo.pokemons.MonsterViewer;
@@ -71,6 +72,14 @@ public class Battle {
         System.out.println("\nBattle Over!");
         if (player.isAlive()) {
             System.out.println(player.getName() + " wins!");
+            int exp;
+            if ((player.getLevel() - wild.getLevel()) < 1) {
+                exp = (int) Math.round(((player.getLevel() + 1)/(double)player.getLevel() * (5 + DiceRoller.rollDice(3, 4))));
+            } else {
+                exp = (player.getLevel() - wild.getLevel()) * (int) Math.round(((player.getLevel() + 1)/(double)player.getLevel() * (5 + DiceRoller.rollDice(3, 4))));
+            }
+            player.setExp(player.getExp() + exp);
+            System.out.printf("Monstermu mendapatkan %d exp!\n", exp);
             return true;
         } else if (wild.isAlive()) {
             System.out.println(wild.getName() + " wins!");

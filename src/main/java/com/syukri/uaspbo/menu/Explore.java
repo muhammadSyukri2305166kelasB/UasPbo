@@ -3,7 +3,7 @@ package com.syukri.uaspbo.menu;
 import java.util.*;
 
 import com.syukri.uaspbo.Battle;
-import com.syukri.uaspbo.Monster;
+import com.syukri.uaspbo.pokemons.Monster;
 import com.syukri.uaspbo.PlayersMonsters;
 import com.syukri.uaspbo.pokemons.MonsterSelector;
 

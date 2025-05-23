@@ -2,7 +2,6 @@ package com.syukri.uaspbo.pokemons;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-import com.syukri.uaspbo.Monster;
 import com.syukri.uaspbo.PlayersMonsters;
 
 public class MonsterSelector {
