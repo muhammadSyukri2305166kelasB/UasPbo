@@ -202,7 +202,7 @@ public abstract class Monster implements Serializable {
     // this.level = level;
     // }
 
-    public void levelUp () {
+    public boolean levelUp () {
         if (this.exp >= this.level * 20) {
             //bisa level up
             this.exp -= this.level * 20;
@@ -211,11 +211,12 @@ public abstract class Monster implements Serializable {
             this.hp = this.maxHp;
             this.attack += DiceRoller.rollDice(1, 2);
             this.defense += DiceRoller.rollDice(1, 3) / 2;
-            
-            System.out.println("Berhasil level up!");
+            return true;
+//            System.out.println("Berhasil level up!");
         } else {
-            System.out.printf("Exp belum cukup (%d / %d)\n", this.getExp(), this.getLevel() * 20);
-            System.out.println("Gagal level up!");
+            return false;
+//            System.out.printf("Exp belum cukup (%d / %d)\n", this.getExp(), this.getLevel() * 20);
+//            System.out.println("Gagal level up!");
         }
         
     }
@@ -246,6 +247,7 @@ public abstract class Monster implements Serializable {
         sb.append("Monster{");
         sb.append("name=").append(name);
         sb.append(", level=").append(level);
+        sb.append(", exp=").append(exp);
         sb.append(", maxHp=").append(maxHp);
         sb.append(", hp=").append(hp);
         sb.append(", attack=").append(attack);

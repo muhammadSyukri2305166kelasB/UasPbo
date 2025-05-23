@@ -67,7 +67,6 @@ public class Battle {
 
         player.resetAfterBattle();
         wild.resetAfterBattle();
-        waitAndClear();
         
         System.out.println("\nBattle Over!");
         if (player.isAlive()) {
@@ -80,12 +79,15 @@ public class Battle {
             }
             player.setExp(player.getExp() + exp);
             System.out.printf("Monstermu mendapatkan %d exp!\n", exp);
+            waitAndClear();
             return true;
         } else if (wild.isAlive()) {
             System.out.println(wild.getName() + " wins!");
+            waitAndClear();
             return false;
         } else {
             System.out.println("Draw!");
+            waitAndClear();
             return true;
         }
     }
@@ -95,7 +97,7 @@ public class Battle {
     // System.out.print("\033[H\033[2J");
     // System.out.flush();
     // }
-    private static void waitAndClear() {
+    public static void waitAndClear() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Tekan Enter untuk melanjutkan...");
         scanner.nextLine();

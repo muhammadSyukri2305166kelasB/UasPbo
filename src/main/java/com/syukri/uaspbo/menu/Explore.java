@@ -85,6 +85,23 @@ public class Explore {
         System.out.println(">> Kamu mendapatkan uang dan exp ");
         // TODO: sistem level up, exp dan uang?
     }
+    
+    static void ascendMonster (PlayersMonsters myDeck, Scanner scanner) {
+        System.out.println("Pilih Monster yang ingin kamu naikkan levelnya");
+        Monster pickedMonster = MonsterSelector.pickMonster(myDeck, scanner);
+        boolean isBerhasil = pickedMonster.levelUp();
+        
+        if (isBerhasil) {
+            System.out.println("Berhasil level up!");
+            System.out.println(pickedMonster.toString());
+        } else {
+            System.out.println("Level up gagal!");
+            System.out.println(pickedMonster.toString());
+        }
+        
+        Battle.waitAndClear();
+        myDeck.Save();
+    }
 
     public void run() {
         while (true) {
@@ -146,7 +163,8 @@ public class Explore {
 
         map.addLocation("Rumah", "Tempat tinggal mu", View::Home, Arrays.asList(
                 new Option("Istirahat", () -> tidur(map)),
-                new Option("Ascend Pokemon", () -> System.out.println(">> Kamu masuk menu ascend "))));
+                new Option("Ascend Pokemon", () -> ascendMonster(myDeck, scanner))
+        ));
 
         map.addLocation("Toko", "Penuhi kebutuhan Pokemon mu", View::Home, Arrays.asList(
                 new Option("Jual", () -> System.out.println(">> Kamu mendapatkan uang ")),
