@@ -32,12 +32,16 @@ class Location implements Interactable {
         this.name = name;
         this.description = description;
         this.view = view;
-        this.interactionOptions = interactionOptions;
+        this.interactionOptions = new ArrayList<>(interactionOptions); // fix here
     }
 
     @Override
     public List<Option> getOptions() {
         return interactionOptions;
+    }
+
+    public void addOptions(Option interactionOptions) {
+        this.interactionOptions.add(interactionOptions);
     }
 
     public void describe() {
@@ -51,10 +55,12 @@ public class Explore {
     private String currentLocation;
     PlayersMonsters myDeck;
     Scanner scanner;
+    private int dayCounter;
 
     public Explore(Scanner scanner, PlayersMonsters myDeck) {
         this.myDeck = myDeck;
         this.scanner = scanner;
+        this.dayCounter = 1;
     }
 
     public void addLocation(String name, String description, Runnable view, List<Option> interactionOptions) {
@@ -75,22 +81,24 @@ public class Explore {
         System.out.println("kamu melawan monster " + locations.get(currentLocation).monster);
         Monster pickedMonster = MonsterSelector.pickMonster(myDeck, scanner);
         Monster wildMonster = locations.get(currentLocation).monster;
-        boolean isWon = Battle.PlayerVsWild(pickedMonster, wildMonster, scanner, myDeck); //ini return boolean, kalah = false
-        // sesudah ini, panggil wait and clear jika ingin memberikan jeda player harus menekan enter
-        
+        boolean isWon = Battle.PlayerVsWild(pickedMonster, wildMonster, scanner, myDeck); // ini return boolean, kalah =
+                                                                                          // false
+        // sesudah ini, panggil wait and clear jika ingin memberikan jeda player harus
+        // menekan enter
+
         if (isWon) {
             locations.get(currentLocation).monster = null;
         }
-        
+
         System.out.println(">> Kamu mendapatkan uang dan exp ");
         // TODO: sistem level up, exp dan uang?
     }
-    
-    static void ascendMonster (PlayersMonsters myDeck, Scanner scanner) {
+
+    static void ascendMonster(PlayersMonsters myDeck, Scanner scanner) {
         System.out.println("Pilih Monster yang ingin kamu naikkan levelnya");
         Monster pickedMonster = MonsterSelector.pickMonster(myDeck, scanner);
         boolean isBerhasil = pickedMonster.levelUp();
-        
+
         if (isBerhasil) {
             System.out.println("Berhasil level up!");
             System.out.println(pickedMonster.toString());
@@ -98,7 +106,7 @@ public class Explore {
             System.out.println("Level up gagal!");
             System.out.println(pickedMonster.toString());
         }
-        
+
         Battle.waitAndClear();
         myDeck.Save();
     }
@@ -112,6 +120,9 @@ public class Explore {
 
             if (locations.get(currentLocation).monster != null) {
                 menu.add(new Option("Lawan Monster", () -> lawanMonster()));
+            }
+            if(GuideNPC.checkNPC(dayCounter, currentLocation)){
+                menu.add(new Option("Bicara", () -> GuideNPC.conversation(dayCounter, currentLocation)));
             }
 
             for (String neighbor : graph.get(currentLocation)) {
@@ -138,6 +149,7 @@ public class Explore {
                 System.out.println("Input tidak valid");
                 continue;
             }
+            clearScreen();
 
             if (choice < 1 || choice > menu.size()) {
                 System.out.println("Pilihan diluar jangkauan");
@@ -145,15 +157,32 @@ public class Explore {
             }
 
             menu.get(choice - 1).action.run();
+            System.out.print("\033[H\033[2J");
         }
     }
-    
-    static void tidur(Explore map) {
+
+    public static void clearScreen() {
+        try {
+            String os = System.getProperty("os.name");
+            if (os.contains("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                new ProcessBuilder("clear").inheritIO().start().waitFor();
+            }
+        } catch (Exception e) {
+            // Handle exception
+            e.printStackTrace();
+        }
+    }
+
+    void tidur(Explore map) {
         System.out.println(">> Kamu beristirahat ");
+        System.out.println("Sekarang hari ke-" + dayCounter);
         map.locations.get("Gurun pasir").monster = MonsterSpawner.getMonster("fire");
         map.locations.get("Sungai").monster = MonsterSpawner.getMonster("water");
         map.locations.get("Hutan").monster = MonsterSpawner.getMonster("plant");
         map.locations.get("Pegunungan").monster = MonsterSpawner.getMonster("none");
+        dayCounter++;
     }
 
     public static void init(Scanner scanner, PlayersMonsters myDeck) {
@@ -162,9 +191,8 @@ public class Explore {
                 new Option("Credit", () -> System.out.println(">> Kamu masuk menu credit "))));
 
         map.addLocation("Rumah", "Tempat tinggal mu", View::Home, Arrays.asList(
-                new Option("Istirahat", () -> tidur(map)),
-                new Option("Ascend Pokemon", () -> ascendMonster(myDeck, scanner))
-        ));
+                new Option("Istirahat", () -> map.tidur(map)),
+                new Option("Ascend Pokemon", () -> ascendMonster(myDeck, scanner))));
 
         map.addLocation("Toko", "Penuhi kebutuhan Pokemon mu", View::Home, Arrays.asList(
                 new Option("Jual", () -> System.out.println(">> Kamu mendapatkan uang ")),
@@ -193,7 +221,7 @@ public class Explore {
         map.connecLocations("Rumah", "Hutan");
         map.connecLocations("Pegunungan", "Hutan");
         map.setStartLocation("Main menu");
-        tidur(map);
+        // map.tidur(map);
         map.run();
     }
 }
