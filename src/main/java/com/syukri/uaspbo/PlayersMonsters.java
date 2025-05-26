@@ -34,12 +34,14 @@ public class PlayersMonsters {
     }
 
     @SuppressWarnings("unchecked")
-    public void Load() {
+    public boolean Load() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
             PlayersMonsters = (ArrayList<Monster>) ois.readObject();
             System.out.println("Game loaded");
+            return true;
         } catch (IOException | ClassNotFoundException e) {
             System.err.println("Failed to load game: " + e.getMessage());
+            return false;
         }
     }
 
