@@ -148,12 +148,12 @@ public class Explore {
         }
     }
     
-    static void tidur(Explore map) {
+    static void tidur(Explore map, PlayersMonsters myDeck) {
         System.out.println(">> Kamu beristirahat ");
-        map.locations.get("Gurun pasir").monster = MonsterSpawner.getMonster("fire");
-        map.locations.get("Sungai").monster = MonsterSpawner.getMonster("water");
-        map.locations.get("Hutan").monster = MonsterSpawner.getMonster("plant");
-        map.locations.get("Pegunungan").monster = MonsterSpawner.getMonster("none");
+        map.locations.get("Gurun pasir").monster = MonsterSpawner.getMonster("fire", myDeck);
+        map.locations.get("Sungai").monster = MonsterSpawner.getMonster("water", myDeck);
+        map.locations.get("Hutan").monster = MonsterSpawner.getMonster("plant", myDeck);
+        map.locations.get("Pegunungan").monster = MonsterSpawner.getMonster("none", myDeck);
     }
 
     public static void init(Scanner scanner, PlayersMonsters myDeck) {
@@ -162,7 +162,7 @@ public class Explore {
                 new Option("Credit", () -> System.out.println(">> Kamu masuk menu credit "))));
 
         map.addLocation("Rumah", "Tempat tinggal mu", View::Home, Arrays.asList(
-                new Option("Istirahat", () -> tidur(map)),
+                new Option("Istirahat", () -> tidur(map, myDeck)),
                 new Option("Ascend Pokemon", () -> ascendMonster(myDeck, scanner))
         ));
 
@@ -193,7 +193,7 @@ public class Explore {
         map.connecLocations("Rumah", "Hutan");
         map.connecLocations("Pegunungan", "Hutan");
         map.setStartLocation("Main menu");
-        tidur(map);
+        tidur(map, myDeck);
         map.run();
     }
 }

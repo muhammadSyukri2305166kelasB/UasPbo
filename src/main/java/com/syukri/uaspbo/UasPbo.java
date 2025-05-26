@@ -16,7 +16,7 @@ public class UasPbo {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         PlayersMonsters myDeck = new PlayersMonsters();
-//        myDeck.test();
+        myDeck.test();
         myDeck.Load();
         Explore.init(scanner, myDeck);
         // Battle.ExampleBattle(scanner, 1);
