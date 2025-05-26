@@ -8,9 +8,8 @@ package com.syukri.uaspbo.pokemons;
  *
  * @author HP
  */
-import com.syukri.uaspbo.Attack;
+import com.syukri.uaspbo.moves.*;
 import com.syukri.uaspbo.DiceRoller;
-import com.syukri.uaspbo.Moves;
 import java.io.Serializable;
 import java.util.ArrayList;
 

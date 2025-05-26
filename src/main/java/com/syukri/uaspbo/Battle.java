@@ -4,6 +4,7 @@
  */
 package com.syukri.uaspbo;
 
+import com.syukri.uaspbo.moves.*;
 import com.syukri.uaspbo.pokemons.Monster;
 import java.util.Scanner;
 
