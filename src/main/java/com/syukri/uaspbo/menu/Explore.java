@@ -146,6 +146,7 @@ public class Explore {
             loc.describe();
             List<Option> menu = new ArrayList<>(loc.getOptions());
             Monster localMonster = loc.monster;
+            
             if (localMonster != null) {
                 String desc = "Lawan Monster " + localMonster.getElement() + " : " + localMonster.getName()
                         + " (level " + localMonster.getLevel() + ")";
@@ -160,7 +161,7 @@ public class Explore {
                     currentLocation = neighbor;
                 }));
             }
-
+            
             menu.add(new Option("Keluar", () -> {
                 System.out.println("dadah");
                 System.exit(0);
