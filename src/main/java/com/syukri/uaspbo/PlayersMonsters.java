@@ -40,6 +40,7 @@ public class PlayersMonsters {
             System.out.println("Game loaded");
             return true;
         } catch (IOException | ClassNotFoundException e) {
+            test();
             System.err.println("Failed to load game: " + e.getMessage());
             return false;
         }

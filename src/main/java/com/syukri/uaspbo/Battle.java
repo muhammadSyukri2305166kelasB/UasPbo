@@ -125,7 +125,7 @@ public class Battle {
                     if (TangkapMonster.TangkapMonsterLiar(wild, myDeck)) {
                         // berhasil ditangkap, dan battle otomatis selesai
                         // "otomatis selesai" dilaksanakan dengan meng-0-kan hp musuh
-                        System.out.println(wild.getName() + " Berhasil di tankap!\nSekarang dia ada di Deck mu");
+                        System.out.println(wild.getName() + " Berhasil di tangkap!\nSekarang dia ada di Deck mu");
                         wild.setHp(0);
                         return;
                     } else {
