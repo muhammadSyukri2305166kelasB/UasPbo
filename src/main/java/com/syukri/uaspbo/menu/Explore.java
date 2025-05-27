@@ -101,9 +101,16 @@ public class Explore {
     }
 
     void lawanMonster() {
-        System.out.println("kamu melawan monster " + locations.get(currentLocation).monster);
-        Monster pickedMonster = MonsterSelector.pickMonster(myDeck, scanner);
+        clearScreen();
         Monster wildMonster = locations.get(currentLocation).monster;
+        System.out.println("kamu melawan monster " + locations.get(currentLocation).monster.getName() + " :\n\n");
+        wildMonster.viewQuickDesc();
+        Monster pickedMonster = MonsterSelector.pickMonster(myDeck, scanner);
+        System.out.println("Apakah Anda yakin? (y/t)");
+        String confirm = scanner.nextLine().trim();
+        if (confirm.equalsIgnoreCase("t")) {
+            return;
+        }
         // ini return boolean, kalah = false
         boolean isWon = Battle.PlayerVsWild(pickedMonster, wildMonster, scanner, myDeck);
         pickedMonster.resetAfterBattle();
@@ -119,6 +126,7 @@ public class Explore {
         Monster pickedMonster = MonsterSelector.pickMonster(myDeck, scanner);
         boolean isBerhasil = pickedMonster.levelUp();
         if (isBerhasil) {
+            pickedMonster.view();
             System.out.println("Berhasil level up!");
             System.out.println(pickedMonster.toString());
         } else {
@@ -137,9 +145,11 @@ public class Explore {
             System.out.print("Sekarang hari ke-" + dayCounter);
             loc.describe();
             List<Option> menu = new ArrayList<>(loc.getOptions());
-
-            if (locations.get(currentLocation).monster != null) {
-                menu.add(new Option("Lawan Monster", () -> lawanMonster()));
+            Monster localMonster = loc.monster;
+            if (localMonster != null) {
+                String desc = "Lawan Monster " + localMonster.getElement() + " : " + localMonster.getName()
+                        + " (level " + localMonster.getLevel() + ")";
+                menu.add(new Option(desc, () -> lawanMonster()));
             }
             if (GuideNPC.checkNPC(dayCounter, currentLocation)) {
                 menu.add(new Option("Bicara", () -> GuideNPC.conversation(dayCounter, currentLocation)));

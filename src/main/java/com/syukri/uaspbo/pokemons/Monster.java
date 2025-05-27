@@ -47,7 +47,8 @@ public abstract class Monster implements Serializable {
         this.spawnRarity = spawnRarity;
     }
 
-    public Monster(String name, int level, int maxHp, int attack, int defense, int speed, ArrayList<Moves> moves, String ViewSource, int spawnRarity) {
+    public Monster(String name, int level, int maxHp, int attack, int defense, int speed, ArrayList<Moves> moves,
+            String ViewSource, int spawnRarity) {
         this.name = name;
         this.level = level;
         this.maxHp = maxHp;
@@ -187,7 +188,7 @@ public abstract class Monster implements Serializable {
     public int getSpawnRarity() {
         return spawnRarity;
     }
-    
+
     public int getExp() {
         return exp;
     }
@@ -195,15 +196,15 @@ public abstract class Monster implements Serializable {
     public void setExp(int exp) {
         this.exp = exp;
     }
-    
+
     // tidak bisa sembarangan atur level, tapi bisa level up
     // public void setLevel(int level) {
     // this.level = level;
     // }
 
-    public boolean levelUp () {
+    public boolean levelUp() {
         if (this.exp >= this.level * 20) {
-            //bisa level up
+            // bisa level up
             this.exp -= this.level * 20;
             this.level++;
             this.maxHp += DiceRoller.rollDice(6, 6); // average 21.5
@@ -211,13 +212,14 @@ public abstract class Monster implements Serializable {
             this.attack += DiceRoller.rollDice(1, 2);
             this.defense += DiceRoller.rollDice(1, 3) / 2;
             return true;
-//            System.out.println("Berhasil level up!");
+            // System.out.println("Berhasil level up!");
         } else {
             return false;
-//            System.out.printf("Exp belum cukup (%d / %d)\n", this.getExp(), this.getLevel() * 20);
-//            System.out.println("Gagal level up!");
+            // System.out.printf("Exp belum cukup (%d / %d)\n", this.getExp(),
+            // this.getLevel() * 20);
+            // System.out.println("Gagal level up!");
         }
-        
+
     }
 
     public void view() {
@@ -240,15 +242,42 @@ public abstract class Monster implements Serializable {
         }
     }
 
+    public void viewQuickDesc() {
+        try {
+            MonsterViewer.CharacterSelectionView(this.ViewSource);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        System.out.printf("%s : %s\n", getName(), getDescription());
+        System.out.println("Rarity \t\t: " + getSpawnRarity() + "%");
+        System.out.println("Level \t\t: " + getLevel());
+        System.out.println("Hp \t\t: " + getMaxHp());
+        System.out.println("Element \t: " + getElement());
+        System.out.println("Speed \t\t: " + getSpeed());
+    }
+
+    public void viewWithoutPicture() {
+        System.out.printf("%s : %s\n", getName(), getDescription());
+        System.out.println("Rarity \t\t: " + getSpawnRarity() + "%");
+        System.out.println("Level \t\t: " + getLevel());
+        System.out.println("Hp \t\t: " + getMaxHp());
+        System.out.println("Attack \t\t: " + getAttack());
+        System.out.println("Defense \t: " + getDefense());
+        System.out.println("Element \t: " + getElement());
+        System.out.println("Speed \t\t: " + getSpeed());
+        System.out.println("Moves \t\t: ");
+        for (int i = 0; i < getMoves().size(); i++) {
+            System.out.println("[" + i + "] " + getMoves().get(i).view());
+        }
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Monster{");
         sb.append("name=").append(name);
         sb.append(", level=").append(level);
         sb.append(", exp=").append(exp);
         sb.append(", maxHp=").append(maxHp);
-        sb.append(", hp=").append(hp);
         sb.append(", attack=").append(attack);
         sb.append(", defense=").append(defense);
         sb.append(", speed=").append(speed);
@@ -261,7 +290,6 @@ public abstract class Monster implements Serializable {
         }
         sb.append("]");
         sb.append(", element=").append(element);
-        sb.append('}');
         return sb.toString();
     }
 

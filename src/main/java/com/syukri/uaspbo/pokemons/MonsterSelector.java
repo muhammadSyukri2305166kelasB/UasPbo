@@ -24,7 +24,8 @@ public class MonsterSelector {
     public static Monster pickMonster(PlayersMonsters myDeck, Scanner in) {
         for (int i = 0; i < myDeck.getPlayersMonsters().size(); i++) {
             Monster pokemon = myDeck.getPlayersMonsters().get(i);
-            System.out.printf("[%d] %s : %s\n", i + 1, pokemon.getName(), pokemon.getDescription());
+            System.out.printf("[%d] %s level %d (%s) \n", i + 1, pokemon.getName(), pokemon.getLevel(),
+                    pokemon.getElement());
         }
         System.out.print("Masukkan Kerenmon yang akan kamu pilih : ");
         Monster picked = myDeck.getPlayersMonsters().get(in.nextInt() - 1);
@@ -147,7 +148,7 @@ public class MonsterSelector {
                 allMonsters.add(new BasicNubbi("Nubbi", level + 1));
                 allMonsters.add(new BasicLopreign("Lopreign", level + 1));
             }
-            
+
             if (element.equalsIgnoreCase("fire")) {
                 allMonsters.add(new FireSmolava("Smolava", level - 1));
                 allMonsters.add(new FireSukaryon("Sukaryon", level - 1));
