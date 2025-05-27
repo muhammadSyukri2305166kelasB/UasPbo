@@ -14,6 +14,7 @@ public class TangkapMonster {
     public static boolean TangkapMonsterLiar (Monster monsterLiarYangAkanDitangkap, PlayersMonsters myDeck) {
         int maxHp = monsterLiarYangAkanDitangkap.getMaxHp();
         int currentHp = monsterLiarYangAkanDitangkap.getHp();
+        monsterLiarYangAkanDitangkap.resetAfterBattle();
         
         if (DiceRoller.rollDice(1, maxHp) > currentHp) {
             myDeck.AddMonster(monsterLiarYangAkanDitangkap);
