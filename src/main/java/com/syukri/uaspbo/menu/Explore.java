@@ -77,28 +77,47 @@ public class Explore {
         currentLocation = start;
     }
 
+    public static void clearScreen() {
+        try {
+            String os = System.getProperty("os.name");
+            if (os.contains("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                new ProcessBuilder("clear").inheritIO().start().waitFor();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    static void tidur(Explore map, PlayersMonsters myDeck) {
+        map.dayCounter++;
+        System.out.println(">> Kamu beristirahat ");
+        map.locations.get("Gurun pasir").monster = MonsterSpawner.getMonster("fire", myDeck);
+        map.locations.get("Sungai").monster = MonsterSpawner.getMonster("water", myDeck);
+        map.locations.get("Hutan").monster = MonsterSpawner.getMonster("plant", myDeck);
+        map.locations.get("Pegunungan").monster = MonsterSpawner.getMonster("none", myDeck);
+        Battle.waitAndClear();
+    }
+
     void lawanMonster() {
         System.out.println("kamu melawan monster " + locations.get(currentLocation).monster);
         Monster pickedMonster = MonsterSelector.pickMonster(myDeck, scanner);
         Monster wildMonster = locations.get(currentLocation).monster;
-        boolean isWon = Battle.PlayerVsWild(pickedMonster, wildMonster, scanner, myDeck); // ini return boolean, kalah =
-                                                                                          // false
-        // sesudah ini, panggil wait and clear jika ingin memberikan jeda player harus
-        // menekan enter
-
+        // ini return boolean, kalah = false
+        boolean isWon = Battle.PlayerVsWild(pickedMonster, wildMonster, scanner, myDeck);
+        pickedMonster.resetAfterBattle();
+        wildMonster.resetAfterBattle();
+        Battle.waitAndClear();
         if (isWon) {
             locations.get(currentLocation).monster = null;
         }
-
-        System.out.println(">> Kamu mendapatkan uang dan exp ");
-        // TODO: sistem level up, exp dan uang?
     }
 
     static void ascendMonster(PlayersMonsters myDeck, Scanner scanner) {
         System.out.println("Pilih Monster yang ingin kamu naikkan levelnya");
         Monster pickedMonster = MonsterSelector.pickMonster(myDeck, scanner);
         boolean isBerhasil = pickedMonster.levelUp();
-
         if (isBerhasil) {
             System.out.println("Berhasil level up!");
             System.out.println(pickedMonster.toString());
@@ -106,22 +125,23 @@ public class Explore {
             System.out.println("Level up gagal!");
             System.out.println(pickedMonster.toString());
         }
-
         Battle.waitAndClear();
         myDeck.Save();
     }
 
     public void run() {
         while (true) {
+            clearScreen();
             Location loc = locations.get(currentLocation);
             loc.view.run();
+            System.out.print("Sekarang hari ke-" + dayCounter);
             loc.describe();
             List<Option> menu = new ArrayList<>(loc.getOptions());
 
             if (locations.get(currentLocation).monster != null) {
                 menu.add(new Option("Lawan Monster", () -> lawanMonster()));
             }
-            if(GuideNPC.checkNPC(dayCounter, currentLocation)){
+            if (GuideNPC.checkNPC(dayCounter, currentLocation)) {
                 menu.add(new Option("Bicara", () -> GuideNPC.conversation(dayCounter, currentLocation)));
             }
 
@@ -149,7 +169,6 @@ public class Explore {
                 System.out.println("Input tidak valid");
                 continue;
             }
-            clearScreen();
 
             if (choice < 1 || choice > menu.size()) {
                 System.out.println("Pilihan diluar jangkauan");
@@ -157,63 +176,34 @@ public class Explore {
             }
 
             menu.get(choice - 1).action.run();
-            System.out.print("\033[H\033[2J");
         }
-    }
-    
-    public static void clearScreen() {
-        try {
-            String os = System.getProperty("os.name");
-            if (os.contains("Windows")) {
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            } else {
-                new ProcessBuilder("clear").inheritIO().start().waitFor();
-            }
-        } catch (Exception e) {
-            // Handle exception
-            e.printStackTrace();
-        }
-    }
-
-    static void tidur(Explore map, PlayersMonsters myDeck) {
-        System.out.println(">> Kamu beristirahat ");
-        map.dayCounter++;
-        System.out.println("Sekarang hari ke-" + map.dayCounter);
-        map.locations.get("Gurun pasir").monster = MonsterSpawner.getMonster("fire", myDeck);
-        map.locations.get("Sungai").monster = MonsterSpawner.getMonster("water", myDeck);
-        map.locations.get("Hutan").monster = MonsterSpawner.getMonster("plant", myDeck);
-        map.locations.get("Pegunungan").monster = MonsterSpawner.getMonster("none", myDeck);
     }
 
     public static void init(Scanner scanner, PlayersMonsters myDeck) {
+        clearScreen();
         Explore map = new Explore(scanner, myDeck);
         map.addLocation("Main menu", "Selamat datang di kerenmon", View::MainMenu, Arrays.asList(
                 new Option("Credit", () -> System.out.println(">> Kamu masuk menu credit "))));
 
         map.addLocation("Rumah", "Tempat tinggal mu", View::Home, Arrays.asList(
                 new Option("Istirahat", () -> tidur(map, myDeck)),
-                new Option("Ascend Pokemon", () -> ascendMonster(myDeck, scanner))
-        ));
+                new Option("Ascend Pokemon", () -> ascendMonster(myDeck, scanner))));
 
         map.addLocation("Toko", "Penuhi kebutuhan Pokemon mu", View::Home, Arrays.asList(
                 new Option("Jual", () -> System.out.println(">> Kamu mendapatkan uang ")),
                 new Option("Belanja", () -> System.out.println(">> Kamu mendapatkan barang "))));
 
         map.addLocation("Gurun pasir", "Persiapkan bekal yang banyak, kamu tidak tahu apa yang ada di depan sana",
-                View::Dessert, Arrays.asList(
-                        new Option("Tangkap Pokemon", () -> System.out.println(">> Kamu mendapatkan Pokemon "))));
+                View::Dessert, new ArrayList<Option>());
 
         map.addLocation("Sungai", "Persiapkan bekal yang banyak, kamu tidak tahu apa yang ada di depan sana",
-                View::River, Arrays.asList(
-                        new Option("Tangkap Pokemon", () -> System.out.println(">> Kamu mendapatkan Pokemon "))));
+                View::River, new ArrayList<Option>());
 
         map.addLocation("Hutan", "Persiapkan bekal yang banyak, kamu tidak tahu apa yang ada di depan sana",
-                View::Forest, Arrays.asList(
-                        new Option("Tangkap Pokemon", () -> System.out.println(">> Kamu mendapatkan Pokemon "))));
+                View::Forest, new ArrayList<Option>());
 
         map.addLocation("Pegunungan", "Persiapkan bekal yang banyak, kamu tidak tahu apa yang ada di depan sana",
-                View::Mountain, Arrays.asList(
-                        new Option("Tangkap Pokemon", () -> System.out.println(">> Kamu mendapatkan Pokemon "))));
+                View::Mountain, new ArrayList<Option>());
 
         map.connecLocations("Rumah", "Main menu");
         map.connecLocations("Rumah", "Toko");

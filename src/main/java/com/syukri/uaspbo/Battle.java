@@ -11,7 +11,6 @@ import java.util.Scanner;
 import com.syukri.uaspbo.pokemons.MonsterViewer;
 //import com.syukri.uaspbo.pokemons.*;
 
-
 /**
  *
  * @author HP
@@ -66,29 +65,26 @@ public class Battle {
             }
         }
 
-        player.resetAfterBattle();
-        wild.resetAfterBattle();
-        
         System.out.println("\nBattle Over!");
         if (player.isAlive()) {
             System.out.println(player.getName() + " wins!");
             int exp;
             if ((player.getLevel() - wild.getLevel()) < 1) {
-                exp = (int) Math.round(((player.getLevel() + 1)/(double)player.getLevel() * (5 + DiceRoller.rollDice(3, 4))));
+                exp = (int) Math.round(
+                        ((player.getLevel() + 1) / (double) player.getLevel() * (5 + DiceRoller.rollDice(3, 4))));
             } else {
-                exp = (player.getLevel() - wild.getLevel()) * (int) Math.round(((player.getLevel() + 1)/(double)player.getLevel() * (5 + DiceRoller.rollDice(3, 4))));
+                exp = (player.getLevel() - wild.getLevel()) * (int) Math.round(
+                        ((player.getLevel() + 1) / (double) player.getLevel() * (5 + DiceRoller.rollDice(3, 4))));
             }
             player.setExp(player.getExp() + exp);
             System.out.printf("Monstermu mendapatkan %d exp!\n", exp);
-            waitAndClear();
             return true;
         } else if (wild.isAlive()) {
             System.out.println(wild.getName() + " wins!");
-            waitAndClear();
+            System.out.println("You lose :(");
             return false;
         } else {
             System.out.println("Draw!");
-            waitAndClear();
             return true;
         }
     }
@@ -109,7 +105,7 @@ public class Battle {
     private static void PlayersTurn(Monster player, Monster wild, Scanner scanner, PlayersMonsters myDeck) {
         // Player's turn
         int choice = -1;
-        while (choice < 1 || choice >= player.getMoves().size() + 1) {
+        while (choice <= 0 || choice >= player.getMoves().size() + 1) {
             System.out.println("Pilih Gerakan:");
             // pilihan untuk menangkap monster liar
             System.out.println("0: Tangkap Monster liar ini");
@@ -124,26 +120,28 @@ public class Battle {
             }
             System.out.print("Masukkan nomor gerakan: ");
             if (scanner.hasNextInt()) {
-                choice = scanner.nextInt() - 1;
-                if (choice == -1) {
+                choice = scanner.nextInt();
+                if (choice == 0) {
                     if (TangkapMonster.TangkapMonsterLiar(wild, myDeck)) {
-                        //berhasil ditangkap, dan battle otomatis selesai
+                        // berhasil ditangkap, dan battle otomatis selesai
                         // "otomatis selesai" dilaksanakan dengan meng-0-kan hp musuh
+                        System.out.println(wild.getName() + " Berhasil di tankap!\nSekarang dia ada di Deck mu");
                         wild.setHp(0);
                         return;
                     } else {
                         // gagal, battle berlanjut seperti biasa
+                        return;
                     }
                 } else {
                     scanner.nextLine();
-                    System.out.println(player.getMoves().get(choice).toString());
+                    System.out.println(player.getMoves().get(choice - 1).toString());
                     System.out.println("Apakah Anda yakin? (y/t)");
                     String confirm = scanner.nextLine().trim();
 
                     if (confirm.equalsIgnoreCase("t")) {
                         choice = -1; // ulangi input
                     } else {
-                        player.useMoves(choice, wild);
+                        player.useMoves(choice - 1, wild);
                         waitAndClear();
                     }
                 }

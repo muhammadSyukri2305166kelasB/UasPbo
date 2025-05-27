@@ -10,7 +10,7 @@ import com.syukri.uaspbo.pokemons.MonsterSelector;
 public class MonsterSpawner {
     public static Monster getMonster(String element, PlayersMonsters myDeck) {
         ArrayList<Monster> PlayersMonsters = myDeck.getPlayersMonsters();
-        
+
         int sum = 0;
         int count = 0;
         int avg = 0;
@@ -25,19 +25,18 @@ public class MonsterSpawner {
         } else if (sum == 0) {
             avg = 1;
         } else {
-            avg = sum/count;
+            avg = sum / count;
         }
-        
+
         int totalRarity = 0;
         MonsterSelector CS = new MonsterSelector();
         ArrayList<Monster> wildMonster = CS.all(element, avg);
-        
-        for (int i = wildMonster.size()-1; i >= 0; i--) {
+
+        for (int i = wildMonster.size() - 1; i >= 0; i--) {
             totalRarity += wildMonster.get(i).getSpawnRarity();
         }
         int mainChance = DiceRoller.rollDice(1, totalRarity);
         mainChance += 99;
-        System.out.println(mainChance);
         int i = 0;
         Monster picked = wildMonster.get(1);
         while (mainChance >= 0 && i < wildMonster.size()) {
@@ -51,11 +50,12 @@ public class MonsterSpawner {
         }
         return picked;
     }
+
     public static void main(String[] args) {
         PlayersMonsters myDeck = new PlayersMonsters();
         myDeck.test();
-//        System.out.println(getMonster("none", myDeck));
-//        System.out.println(getMonster("fire", myDeck));
+        // System.out.println(getMonster("none", myDeck));
+        // System.out.println(getMonster("fire", myDeck));
         System.out.println(getMonster("water", myDeck));
         System.out.println(getMonster("water", myDeck));
         System.out.println(getMonster("water", myDeck));
@@ -70,7 +70,7 @@ public class MonsterSpawner {
         System.out.println(getMonster("water", myDeck));
         System.out.println(getMonster("water", myDeck));
         System.out.println(getMonster("water", myDeck));
-//        System.out.println(getMonster("plant", myDeck));
+        // System.out.println(getMonster("plant", myDeck));
     }
 
 }
