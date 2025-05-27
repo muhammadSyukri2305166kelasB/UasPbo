@@ -152,7 +152,7 @@ public class Explore {
                 menu.add(new Option(desc, () -> lawanMonster()));
             }
             if (GuideNPC.checkNPC(dayCounter, currentLocation)) {
-                menu.add(new Option("Bicara", () -> GuideNPC.conversation(dayCounter, currentLocation)));
+                menu.add(new Option("Bicara dengan NPC (Digga, Guider)", () -> GuideNPC.conversation(dayCounter, currentLocation)));
             }
 
             for (String neighbor : graph.get(currentLocation)) {
