@@ -1,49 +1,75 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.syukri.uaspbo;
 
-import com.syukri.uaspbo.pokemons.Monster;
-import java.util.ArrayList;
-
 import com.syukri.uaspbo.pokemons.*;
-
+import java.util.*;
 import java.io.*;
 
-/**
- *
- * @author HP
- */
+class GameData implements Serializable {
+    public ArrayList<Monster> monsterList;
+    public int dayCounter;
+    public Map<String, Set<String>> monsterCounter;
+    public String currentLocation;
+    public Map<String, Monster> monstersPerLocation;
+}
+
 public class PlayersMonsters {
     private ArrayList<Monster> PlayersMonsters;
     private final String filename;
+    private int savedDayCounter;
+    private Map<String, Set<String>> savedMonsterCounter;
+    private String savedCurrentLocation;
+    private Map<String, Monster> savedMonstersPerLocation;
 
     public PlayersMonsters() {
         PlayersMonsters = new ArrayList<>();
-        filename = "abc.dat";
+        filename = "savegame.dat";
     }
 
-    public void Save() {
+    public void Save(int dayCounter, Map<String, Set<String>> monsterCounter, String currentLocation, Map<String, Monster> monstersPerLocation) {
+        GameData data = new GameData();
+        data.monsterList = PlayersMonsters;
+        data.dayCounter = dayCounter;
+        data.monsterCounter = monsterCounter;
+        data.currentLocation = currentLocation;
+        data.monstersPerLocation = monstersPerLocation;
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
-            oos.writeObject(PlayersMonsters);
-            System.out.println("Game saved");
+            oos.writeObject(data);
+            System.out.println("Game state saved.");
         } catch (IOException e) {
             System.err.println("Failed to save game: " + e.getMessage());
         }
     }
 
-    @SuppressWarnings("unchecked")
     public boolean Load() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
-            PlayersMonsters = (ArrayList<Monster>) ois.readObject();
-            System.out.println("Game loaded");
+            GameData data = (GameData) ois.readObject();
+            this.PlayersMonsters = data.monsterList;
+            this.savedDayCounter = data.dayCounter;
+            this.savedMonsterCounter = data.monsterCounter;
+            this.savedCurrentLocation = data.currentLocation;
+            this.savedMonstersPerLocation = data.monstersPerLocation;
+            System.out.println("Game state loaded.");
             return true;
         } catch (IOException | ClassNotFoundException e) {
-            test();
             System.err.println("Failed to load game: " + e.getMessage());
             return false;
         }
+    }
+
+    public int getSavedDayCounter() {
+        return savedDayCounter;
+    }
+
+    public Map<String, Set<String>> getSavedMonsterCounter() {
+        return savedMonsterCounter;
+    }
+
+    public String getSavedCurrentLocation() {
+        return savedCurrentLocation;
+    }
+
+    public Map<String, Monster> getSavedMonstersPerLocation() {
+        return savedMonstersPerLocation;
     }
 
     public void ViewListOfMonsters() {
@@ -58,7 +84,10 @@ public class PlayersMonsters {
 
     public void AddMonster(Monster newMonster) {
         this.PlayersMonsters.add(newMonster);
-        Save();
+    }
+
+    public void addMonster(Monster m) {
+        PlayersMonsters.add(m);
     }
 
     public void test() {
@@ -70,12 +99,20 @@ public class PlayersMonsters {
         AddMonster(monster2);
         AddMonster(monster3);
         AddMonster(monster4);
-        Save();
+    }
+
+    public Monster get(int i) {
+        return PlayersMonsters.get(i);
+    }
+
+    public int size() {
+        return PlayersMonsters.size();
     }
 
     public static void main(String[] args) {
         PlayersMonsters data = new PlayersMonsters();
         data.test();
+        data.Save(1, new HashMap<>(), "Rumah", new HashMap<>());
         data.Load();
         data.ViewListOfMonsters();
     }
