@@ -7,7 +7,21 @@ public class GuideNPC {
     public static void conversation(int dayCounter, String currentLocation){
         PlayersMonsters myDeck = new PlayersMonsters();
         if(myDeck.Load() == false){
-            //masukan di sini ja'far 
+            Battle.waitAndClear();
+            System.out.println("Ada kelompok misterius yang punya rencana lebih gelap: mengorbankan seluruh");
+            System.out.println("Pokémon di dunia demi memanggil Dewa Pokémon, makhluk kuno yang katanya bisa");
+            System.out.println("memberikan kekuatan absolut kepada siapa pun yang mengendalikannya.");
+            Battle.waitAndClear();
+            System.out.println("Digga, seorang trainer, mengajak kamu untuk mengumpulkan semua pokemon yang ada");
+            System.out.println("demi menyelamatkan para pokemon.  kamu tentunya menolak karena tidak mau");
+            System.out.println("berurusan dengan kelompok aneh tersebut. Digga mengajak Kembali sambil ");
+            System.out.println("menambahkan “..kamu bisa mengetahui siapa ayahmu jika ikut bersamaku“.");
+            Battle.waitAndClear();
+            System.out.println("Kamu awalnya merasa itu adalah penawaran aneh, namun kamu  teringat pesan ibu yang");
+            System.out.println("memberi tahu jika ingin mengetaahui siapa ayahmu maka kumpulkanlah banyak");
+            System.out.println("pokemon");
+            Battle.waitAndClear();
+            System.out.println("Dikarenakan kamu ingin mengenal ayahmu akhirnya kamu mengiyakan ajakan sang trainer.");
         }
 
         if(dayCounter == 1){
