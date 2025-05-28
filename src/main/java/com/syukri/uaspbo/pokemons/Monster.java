@@ -99,6 +99,10 @@ public abstract class Monster implements Serializable {
         return name;
     }
 
+    public String getType() {
+        return this.element; 
+    }
+
     public int getLevel() {
         return level;
     }

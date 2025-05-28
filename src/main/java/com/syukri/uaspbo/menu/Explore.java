@@ -50,17 +50,37 @@ class Location implements Interactable {
 }
 
 public class Explore {
-    private Map<String, Location> locations = new HashMap<>(); // menyimpan list objek-objek Location
-    private Map<String, List<String>> graph = new HashMap<>(); // Membuat struktur data graf
+    private Map<String, Location> locations = new HashMap<>();
+    private Map<String, List<String>> graph = new HashMap<>();
     private String currentLocation;
     PlayersMonsters myDeck;
     Scanner scanner;
     private int dayCounter;
+    private Map<String, Set<String>> monsterCounter = new HashMap<>();
+
+    private void initializeMonsterCounter() {
+        monsterCounter.put("Basic", new HashSet<>());
+        monsterCounter.put("Fire", new HashSet<>());
+        monsterCounter.put("Plant", new HashSet<>());
+        monsterCounter.put("Water", new HashSet<>());
+    }
+
+    private void addMonster(Monster m) {
+        String type = m.getType();
+        String name = m.getName();
+        if (!monsterCounter.get(type).contains(name)) {
+            monsterCounter.get(type).add(name);
+            System.out.println("Monster baru ditangkap: " + name);
+        } else {
+            System.out.println("Monster " + name + " sudah pernah ditangkap.");
+        }
+    }
 
     public Explore(Scanner scanner, PlayersMonsters myDeck) {
         this.myDeck = myDeck;
         this.scanner = scanner;
         this.dayCounter = 1;
+        initializeMonsterCounter();
     }
 
     public void addLocation(String name, String description, Runnable view, List<Option> interactionOptions) {
@@ -111,12 +131,12 @@ public class Explore {
         if (confirm.equalsIgnoreCase("t")) {
             return;
         }
-        // ini return boolean, kalah = false
         boolean isWon = Battle.PlayerVsWild(pickedMonster, wildMonster, scanner, myDeck);
         pickedMonster.resetAfterBattle();
         wildMonster.resetAfterBattle();
         Battle.waitAndClear();
         if (isWon) {
+            addMonster(wildMonster);
             locations.get(currentLocation).monster = null;
         }
     }
@@ -139,6 +159,17 @@ public class Explore {
 
     public void run() {
         while (true) {
+            if (checkEnding.hasWon(monsterCounter)) {
+                Battle.waitAndClear();
+                System.out.println("Kamu menang! Semua jenis monster telah dikumpulkan.");
+                return;
+            }
+            if (checkEnding.hasLost(dayCounter)) {
+                Battle.waitAndClear();
+                System.out.println("Hari sudah melebihi batas (14 hari). Kamu kalah!");
+                return;
+            }
+
             clearScreen();
             Location loc = locations.get(currentLocation);
             loc.view.run();
@@ -146,7 +177,7 @@ public class Explore {
             loc.describe();
             List<Option> menu = new ArrayList<>(loc.getOptions());
             Monster localMonster = loc.monster;
-            
+
             if (localMonster != null) {
                 String desc = "Lawan Monster " + localMonster.getElement() + " : " + localMonster.getName()
                         + " (level " + localMonster.getLevel() + ")";
@@ -161,7 +192,7 @@ public class Explore {
                     currentLocation = neighbor;
                 }));
             }
-            
+
             menu.add(new Option("Keluar", () -> {
                 System.out.println("dadah");
                 System.exit(0);
