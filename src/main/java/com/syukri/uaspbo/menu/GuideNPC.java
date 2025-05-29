@@ -1,12 +1,9 @@
 package com.syukri.uaspbo.menu;
 
 import com.syukri.uaspbo.Battle;
-import com.syukri.uaspbo.PlayersMonsters;
 
 public class GuideNPC {
     public static void conversation(int dayCounter, String currentLocation){
-        Explore objekDay = new Explore(null, null);
-        PlayersMonsters myDeck = new PlayersMonsters();
         if(dayCounter == 0){
             Battle.waitAndClear();
             System.out.println("Ada kelompok misterius yang punya rencana lebih gelap: mengorbankan seluruh");
@@ -23,7 +20,6 @@ public class GuideNPC {
             System.out.println("pokemon");
             Battle.waitAndClear();
             System.out.println("Dikarenakan kamu ingin mengenal ayahmu akhirnya kamu mengiyakan ajakan sang trainer.");
-            objekDay.dayCounter++;
         }
 
         if(dayCounter == 1 && currentLocation.equals("Rumah")){

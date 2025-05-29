@@ -198,7 +198,8 @@ public class Explore {
                 menu.add(new Option(desc, () -> lawanMonster()));
             }
             if (GuideNPC.checkNPC(dayCounter, currentLocation)) {
-                menu.add(new Option("Bicara dengan NPC (Digga, Guider)", () -> GuideNPC.conversation(dayCounter, currentLocation)));
+                menu.add(new Option("Bicara dengan NPC (Digga, Guider)",
+                        () -> GuideNPC.conversation(dayCounter, currentLocation)));
             }
 
             for (String neighbor : graph.get(currentLocation)) {
@@ -263,11 +264,10 @@ public class Explore {
         map.connecLocations("Rumah", "Sungai");
         map.connecLocations("Rumah", "Hutan");
         map.connecLocations("Pegunungan", "Hutan");
-
         if (myDeck.Load()) {
             map.dayCounter = myDeck.getSavedDayCounter();
             map.monsterCounter = myDeck.getSavedMonsterCounter();
-            String savedLocation = myDeck.getSavedCurrentLocation();
+            map.currentLocation = myDeck.getSavedCurrentLocation();
             Map<String, Monster> restoredMonsters = myDeck.getSavedMonstersPerLocation();
             if (restoredMonsters != null) {
                 for (Map.Entry<String, Monster> entry : restoredMonsters.entrySet()) {
@@ -277,7 +277,7 @@ public class Explore {
                 }
             }
 
-            map.setStartLocation("Main menu"); 
+            map.setStartLocation("Main menu");
             clearScreen();
             System.out.println("🔄 Game ditemukan.");
             System.out.println("[1] Lanjutkan Permainan");
@@ -288,12 +288,13 @@ public class Explore {
                 map.dayCounter = 0;
                 map.monsterCounter.clear();
                 map.initializeMonsterCounter();
+                map.currentLocation = "Rumah";
+                GuideNPC.conversation(0, "Rumah");
+                tidur(map, myDeck);
             }
         } else {
             map.setStartLocation("Main menu");
         }
-
-        GuideNPC.conversation(map.dayCounter, "rumah");
         map.run();
 
     }
