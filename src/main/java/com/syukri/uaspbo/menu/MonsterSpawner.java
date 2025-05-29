@@ -3,12 +3,12 @@ package com.syukri.uaspbo.menu;
 import java.util.*;
 
 import com.syukri.uaspbo.DiceRoller;
-import com.syukri.uaspbo.PlayersMonsters;
+import com.syukri.uaspbo.PlayerData;
 import com.syukri.uaspbo.pokemons.Monster;
 import com.syukri.uaspbo.pokemons.MonsterSelector;
 
 public class MonsterSpawner {
-    public static Monster getMonster(String element, PlayersMonsters myDeck) {
+    public static Monster getMonster(String element, PlayerData myDeck) {
         ArrayList<Monster> PlayersMonsters = myDeck.getPlayersMonsters();
 
         int sum = 0;
@@ -52,7 +52,7 @@ public class MonsterSpawner {
     }
 
     public static void main(String[] args) {
-        PlayersMonsters myDeck = new PlayersMonsters();
+        PlayerData myDeck = new PlayerData();
         myDeck.test();
         // System.out.println(getMonster("none", myDeck));
         // System.out.println(getMonster("fire", myDeck));

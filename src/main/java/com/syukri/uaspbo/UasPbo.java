@@ -15,7 +15,7 @@ import com.syukri.uaspbo.menu.Explore;
 public class UasPbo {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        PlayersMonsters myDeck = new PlayersMonsters();
+        PlayerData myDeck = new PlayerData();
         myDeck.Load();
         Explore.init(scanner, myDeck);
         scanner.close();

@@ -2,12 +2,12 @@ package com.syukri.uaspbo.pokemons;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-import com.syukri.uaspbo.PlayersMonsters;
+import com.syukri.uaspbo.PlayerData;
 
 public class MonsterSelector {
 
     public static void main(String[] args) {
-        PlayersMonsters myDeck = new PlayersMonsters();
+        PlayerData myDeck = new PlayerData();
         myDeck.test();
         myDeck.Load();
         for (int i = 0; i < myDeck.getPlayersMonsters().size(); i++) {
@@ -21,15 +21,43 @@ public class MonsterSelector {
         in.close();
     }
 
-    public static Monster pickMonster(PlayersMonsters myDeck, Scanner in) {
+    public static Monster pickMonster(PlayerData myDeck, Scanner in) {
+        int choice = -1;
+        Monster picked = myDeck.getPlayersMonsters().get(0);
+
         for (int i = 0; i < myDeck.getPlayersMonsters().size(); i++) {
             Monster pokemon = myDeck.getPlayersMonsters().get(i);
             System.out.printf("[%d] %s level %d (%s) \n", i + 1, pokemon.getName(), pokemon.getLevel(),
                     pokemon.getElement());
         }
         System.out.print("Masukkan Kerenmon yang akan kamu pilih : ");
-        Monster picked = myDeck.getPlayersMonsters().get(in.nextInt() - 1);
+        do {
+            choice = in.nextInt() - 1;
+            if (choice >= 0 && choice < myDeck.getPlayersMonsters().size()) {
+                picked = myDeck.getPlayersMonsters().get(choice);
+                return picked;
+            } else
+                System.out.print("Pilihan tidak valid! silahkan pilih lagi : ");
+            choice = -1;
+        } while (choice == -1);
         return picked;
+    }
+
+    public static ArrayList<Monster> all() {
+        ArrayList<Monster> allMonsters = new ArrayList<>();
+        allMonsters.add(new FireSmolava("Smolava", 1));
+        allMonsters.add(new FireSukaryon("Sukaryon", 1));
+        allMonsters.add(new FireVoltrik("Voltrik", 1));
+        allMonsters.add(new WaterBanyu("Banyu", 1));
+        allMonsters.add(new WaterMizumon("Mizumon", 1));
+        allMonsters.add(new WaterSamequill("Samequill", 1));
+        allMonsters.add(new PlantChurippi("Churippi", 1));
+        allMonsters.add(new PlantKurikar("Kurikar", 1));
+        allMonsters.add(new PlantOriza("Oriza", 1));
+        allMonsters.add(new BasicFluffawn("Fluffawn", 1));
+        allMonsters.add(new BasicNubbi("Nubbi", 1));
+        allMonsters.add(new BasicLopreign("Lopreign", 1));
+        return allMonsters;
     }
 
     public ArrayList<Monster> all(String element, int level) {

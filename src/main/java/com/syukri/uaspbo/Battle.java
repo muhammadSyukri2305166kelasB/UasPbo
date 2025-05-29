@@ -17,7 +17,7 @@ import com.syukri.uaspbo.pokemons.MonsterViewer;
  */
 public class Battle {
 
-    public static boolean PlayerVsWild(Monster player, Monster wild, Scanner scanner, PlayersMonsters myDeck) {
+    public static boolean PlayerVsWild(Monster player, Monster wild, Scanner scanner, PlayerData myDeck) {
         try {
             MonsterViewer.BattleView(player.getViewSource(), wild.getViewSource());
         } catch (Exception e) {
@@ -102,7 +102,7 @@ public class Battle {
         // scanner.close(); // jangan di close
     }
 
-    private static void PlayersTurn(Monster player, Monster wild, Scanner scanner, PlayersMonsters myDeck) {
+    private static void PlayersTurn(Monster player, Monster wild, Scanner scanner, PlayerData myDeck) {
         // Player's turn
         int choice = -1;
         while (choice <= 0 || choice >= player.getMoves().size() + 1) {
@@ -123,6 +123,7 @@ public class Battle {
                 choice = scanner.nextInt();
                 if (choice == 0) {
                     if (TangkapMonster.TangkapMonsterLiar(wild, myDeck)) {
+                        
                         // berhasil ditangkap, dan battle otomatis selesai
                         // "otomatis selesai" dilaksanakan dengan meng-0-kan hp musuh
                         System.out.println(wild.getName() + " Berhasil di tangkap!\nSekarang dia ada di Deck mu");

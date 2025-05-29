@@ -12,7 +12,7 @@ class GameData implements Serializable {
     public Map<String, Monster> monstersPerLocation;
 }
 
-public class PlayersMonsters {
+public class PlayerData {
     private ArrayList<Monster> PlayersMonsters;
     private final String filename;
     private int savedDayCounter;
@@ -20,12 +20,13 @@ public class PlayersMonsters {
     private String savedCurrentLocation;
     private Map<String, Monster> savedMonstersPerLocation;
 
-    public PlayersMonsters() {
+    public PlayerData() {
         PlayersMonsters = new ArrayList<>();
         filename = "savegame.dat";
     }
 
-    public void Save(int dayCounter, Map<String, Set<String>> monsterCounter, String currentLocation, Map<String, Monster> monstersPerLocation) {
+    public void Save(int dayCounter, Map<String, Set<String>> monsterCounter, String currentLocation,
+        Map<String, Monster> monstersPerLocation) {
         GameData data = new GameData();
         data.monsterList = PlayersMonsters;
         data.dayCounter = dayCounter;
@@ -55,7 +56,9 @@ public class PlayersMonsters {
             return false;
         }
     }
-
+public void setPlayersMonsters(ArrayList<Monster> playersMonsters) {
+    PlayersMonsters = playersMonsters;
+}
     public int getSavedDayCounter() {
         return savedDayCounter;
     }
@@ -84,10 +87,14 @@ public class PlayersMonsters {
 
     public void AddMonster(Monster newMonster) {
         this.PlayersMonsters.add(newMonster);
-    }
-
-    public void addMonster(Monster m) {
-        PlayersMonsters.add(m);
+        String type = newMonster.getType();
+        String name = newMonster.getName();
+        if (!this.savedMonsterCounter.get(type).contains(name)) {
+            this.savedMonsterCounter.get(type).add(name);
+            System.out.println("Monster baru ditangkap: " + name);
+        } else {
+            System.out.println("Monster " + name + " sudah pernah ditangkap.");
+        }
     }
 
     public void test() {
@@ -110,7 +117,7 @@ public class PlayersMonsters {
     }
 
     public static void main(String[] args) {
-        PlayersMonsters data = new PlayersMonsters();
+        PlayerData data = new PlayerData();
         data.test();
         data.Save(1, new HashMap<>(), "Rumah", new HashMap<>());
         data.Load();

@@ -4,8 +4,9 @@ import java.util.*;
 
 import com.syukri.uaspbo.Battle;
 import com.syukri.uaspbo.pokemons.Monster;
-import com.syukri.uaspbo.PlayersMonsters;
+import com.syukri.uaspbo.PlayerData;
 import com.syukri.uaspbo.pokemons.MonsterSelector;
+import com.syukri.uaspbo.pokemons.WaterBanyu;
 
 class Option {
     String description;
@@ -53,7 +54,7 @@ public class Explore {
     private Map<String, Location> locations = new HashMap<>();
     private Map<String, List<String>> graph = new HashMap<>();
     private String currentLocation;
-    PlayersMonsters myDeck;
+    PlayerData myDeck;
     Scanner scanner;
     int dayCounter;
     Map<String, Set<String>> monsterCounter = new HashMap<>();
@@ -65,18 +66,7 @@ public class Explore {
         monsterCounter.put("water", new HashSet<>());
     }
 
-    private void addMonster(Monster m) {
-        String type = m.getType();
-        String name = m.getName();
-        if (!monsterCounter.get(type).contains(name)) {
-            monsterCounter.get(type).add(name);
-            System.out.println("Monster baru ditangkap: " + name);
-        } else {
-            System.out.println("Monster " + name + " sudah pernah ditangkap.");
-        }
-    }
-
-    public Explore(Scanner scanner, PlayersMonsters myDeck) {
+    public Explore(Scanner scanner, PlayerData myDeck) {
         this.myDeck = myDeck;
         this.scanner = scanner;
         this.dayCounter = 0;
@@ -122,13 +112,16 @@ public class Explore {
         }
     }
 
-    static void tidur(Explore map, PlayersMonsters myDeck) {
+    static void tidur(Explore map, PlayerData myDeck) {
         map.dayCounter++;
         System.out.println(">> Kamu beristirahat ");
         map.locations.get("Gurun pasir").monster = MonsterSpawner.getMonster("fire", map.myDeck);
         map.locations.get("Sungai").monster = MonsterSpawner.getMonster("water", map.myDeck);
         map.locations.get("Hutan").monster = MonsterSpawner.getMonster("plant", map.myDeck);
         map.locations.get("Pegunungan").monster = MonsterSpawner.getMonster("none", map.myDeck);
+        // for (Monster monster : MonsterSelector.all()) {
+        //     myDeck.AddMonster(monster);
+        // }
         map.myDeck.Save(map.dayCounter, map.monsterCounter, map.getCurrentLocation(), map.getMonsterPerLocation());
         Battle.waitAndClear();
     }
@@ -149,13 +142,13 @@ public class Explore {
         wildMonster.resetAfterBattle();
         Battle.waitAndClear();
         if (isWon) {
-            addMonster(wildMonster);
+            monsterCounter = myDeck.getSavedMonsterCounter();
             locations.get(currentLocation).monster = null;
             myDeck.Save(dayCounter, monsterCounter, currentLocation, getMonsterPerLocation());
         }
     }
 
-    static void ascendMonster(PlayersMonsters myDeck, Scanner scanner, Explore map) {
+    static void ascendMonster(PlayerData myDeck, Scanner scanner, Explore map) {
         System.out.println("Pilih Monster yang ingin kamu naikkan levelnya");
         Monster pickedMonster = MonsterSelector.pickMonster(myDeck, scanner);
         boolean isBerhasil = pickedMonster.levelUp();
@@ -201,11 +194,9 @@ public class Explore {
                 menu.add(new Option("Bicara dengan NPC (Digga, Guider)",
                         () -> GuideNPC.conversation(dayCounter, currentLocation)));
             }
-
             for (String neighbor : graph.get(currentLocation)) {
                 menu.add(new Option("Pergi ke " + neighbor, () -> currentLocation = neighbor));
             }
-
             menu.add(new Option("Keluar", () -> {
                 System.out.println("dadah");
                 System.exit(0);
@@ -234,7 +225,7 @@ public class Explore {
         }
     }
 
-    public static void init(Scanner scanner, PlayersMonsters myDeck) {
+    public static void init(Scanner scanner, PlayerData myDeck) {
         clearScreen();
         Explore map = new Explore(scanner, myDeck);
 
@@ -244,10 +235,6 @@ public class Explore {
         map.addLocation("Rumah", "Tempat tinggal mu", View::Home, Arrays.asList(
                 new Option("Istirahat", () -> tidur(map, myDeck)),
                 new Option("Ascend Pokemon", () -> ascendMonster(myDeck, scanner, map))));
-
-        map.addLocation("Toko", "Penuhi kebutuhan Pokemon mu", View::Home, Arrays.asList(
-                new Option("Jual", () -> System.out.println(">> Kamu mendapatkan uang ")),
-                new Option("Belanja", () -> System.out.println(">> Kamu mendapatkan barang "))));
 
         map.addLocation("Gurun pasir", "Persiapkan bekal yang banyak, kamu tidak tahu apa yang ada di depan sana",
                 View::Dessert, new ArrayList<>());
@@ -259,7 +246,6 @@ public class Explore {
                 View::Mountain, new ArrayList<>());
 
         map.connecLocations("Rumah", "Main menu");
-        map.connecLocations("Rumah", "Toko");
         map.connecLocations("Rumah", "Gurun pasir");
         map.connecLocations("Rumah", "Sungai");
         map.connecLocations("Rumah", "Hutan");
@@ -267,7 +253,6 @@ public class Explore {
         if (myDeck.Load()) {
             map.dayCounter = myDeck.getSavedDayCounter();
             map.monsterCounter = myDeck.getSavedMonsterCounter();
-            map.currentLocation = myDeck.getSavedCurrentLocation();
             Map<String, Monster> restoredMonsters = myDeck.getSavedMonstersPerLocation();
             if (restoredMonsters != null) {
                 for (Map.Entry<String, Monster> entry : restoredMonsters.entrySet()) {
@@ -279,7 +264,7 @@ public class Explore {
 
             map.setStartLocation("Main menu");
             clearScreen();
-            System.out.println("🔄 Game ditemukan.");
+            System.out.println("Game ditemukan.");
             System.out.println("[1] Lanjutkan Permainan");
             System.out.println("[2] Mulai baru");
             System.out.print("Pilih opsi: ");
@@ -290,10 +275,30 @@ public class Explore {
                 map.initializeMonsterCounter();
                 map.currentLocation = "Rumah";
                 GuideNPC.conversation(0, "Rumah");
+                map.myDeck.Save(map.dayCounter, map.monsterCounter, map.getCurrentLocation(),
+                        map.getMonsterPerLocation());
+                map.myDeck.Load();
+                myDeck.setPlayersMonsters(new ArrayList<Monster>());
+                map.myDeck.AddMonster(new WaterBanyu("Banyu", 1));
                 tidur(map, myDeck);
             }
         } else {
-            map.setStartLocation("Main menu");
+            map.dayCounter = 0;
+            map.monsterCounter.clear();
+            map.initializeMonsterCounter();
+            map.currentLocation = "Rumah";
+            GuideNPC.conversation(0, "Rumah");
+            map.myDeck.Save(map.dayCounter, map.monsterCounter, map.getCurrentLocation(), map.getMonsterPerLocation());
+            map.myDeck.Load();
+            myDeck.setPlayersMonsters(new ArrayList<Monster>());
+            map.myDeck.AddMonster(new WaterBanyu("Banyu", 1));
+            tidur(map, myDeck);
+        }
+        if (myDeck.getSavedCurrentLocation() != null) {
+            map.setStartLocation(myDeck.getSavedCurrentLocation());
+        } else {
+            map.setStartLocation("Rumah");
+
         }
         map.run();
 
