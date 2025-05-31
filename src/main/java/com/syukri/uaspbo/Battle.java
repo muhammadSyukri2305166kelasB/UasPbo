@@ -31,7 +31,7 @@ public class Battle {
         System.out.println("Monster liar:");
         System.out.println(wild.toString());
 
-        waitAndClear();
+        waitAndClear(scanner);
 
         while (player.isAlive() || wild.isAlive()) {
             System.out.println("\n---- Round " + round + " ----");
@@ -39,7 +39,7 @@ public class Battle {
                     + "Enemy HP: " + wild.getHp() + "/" + wild.getMaxHp());
 
             if (wild.getSpeed() > player.getSpeed()) {
-                WildsTurn(player, wild);
+                WildsTurn(player, wild, scanner);
                 if (!player.isAlive() || !wild.isAlive()) {
                     break;
                 }
@@ -56,7 +56,7 @@ public class Battle {
                     break;
                 }
 
-                WildsTurn(player, wild);
+                WildsTurn(player, wild, scanner);
                 if (!player.isAlive() || !wild.isAlive()) {
                     break;
                 }
@@ -94,8 +94,7 @@ public class Battle {
     // System.out.print("\033[H\033[2J");
     // System.out.flush();
     // }
-    public static void waitAndClear() {
-        Scanner scanner = new Scanner(System.in);
+    public static void waitAndClear(Scanner scanner) {
         System.out.println("Tekan Enter untuk melanjutkan...");
         scanner.nextLine();
         // clearConsole();
@@ -143,7 +142,7 @@ public class Battle {
                         choice = -1; // ulangi input
                     } else {
                         player.useMoves(choice - 1, wild);
-                        waitAndClear();
+                        waitAndClear(scanner);
                     }
                 }
             } else {
@@ -152,7 +151,7 @@ public class Battle {
         }
     }
 
-    private static void WildsTurn(Monster player, Monster wild) {
+    private static void WildsTurn(Monster player, Monster wild, Scanner scanner) {
         // wild's turn (basic random AI)
         int wildMoveIndex = DiceRoller.rollDice(1, wild.getMoves().size()) - 1;
         if (wild.getMoves().get(wildMoveIndex) instanceof Heal) {
@@ -160,6 +159,6 @@ public class Battle {
         } else {
             wild.useMoves(wildMoveIndex, player); // Punch
         }
-        waitAndClear();
+        waitAndClear(scanner);
     }
 }
