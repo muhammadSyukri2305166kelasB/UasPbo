@@ -4,10 +4,11 @@
  */
 package com.syukri.uaspbo;
 
-import com.syukri.uaspbo.moves.*;
-import com.syukri.uaspbo.pokemons.Monster;
 import java.util.Scanner;
 
+import com.syukri.uaspbo.moves.Attack;
+import com.syukri.uaspbo.moves.Heal;
+import com.syukri.uaspbo.pokemons.Monster;
 import com.syukri.uaspbo.pokemons.MonsterViewer;
 //import com.syukri.uaspbo.pokemons.*;
 
@@ -31,7 +32,7 @@ public class Battle {
         System.out.println("Monster liar:");
         System.out.println(wild.toString());
 
-        waitAndClear(scanner);
+        waitAndClear();
 
         while (player.isAlive() || wild.isAlive()) {
             System.out.println("\n---- Round " + round + " ----");
@@ -94,7 +95,8 @@ public class Battle {
     // System.out.print("\033[H\033[2J");
     // System.out.flush();
     // }
-    public static void waitAndClear(Scanner scanner) {
+    public static void waitAndClear() {
+        Scanner scanner = new Scanner (System.in);
         System.out.println("Tekan Enter untuk melanjutkan...");
         scanner.nextLine();
         // clearConsole();
@@ -142,7 +144,7 @@ public class Battle {
                         choice = -1; // ulangi input
                     } else {
                         player.useMoves(choice - 1, wild);
-                        waitAndClear(scanner);
+                        waitAndClear();
                     }
                 }
             } else {
@@ -159,6 +161,6 @@ public class Battle {
         } else {
             wild.useMoves(wildMoveIndex, player); // Punch
         }
-        waitAndClear(scanner);
+        waitAndClear();
     }
 }
