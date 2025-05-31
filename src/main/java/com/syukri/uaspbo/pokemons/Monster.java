@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 //import com.syukri.uaspbo.pokemons.MonsterViewer;
 
-public abstract class Monster implements Serializable {
+public class Monster implements Serializable {
     private String name;
     private String Description = "Default Monster Description";
     private int level;
