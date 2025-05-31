@@ -54,6 +54,12 @@ public class GuideNPC {
             Battle.waitAndClear();
         }else if(dayCounter == 2){
             
+        }else if(dayCounter == 4){
+
+        }else if(dayCounter == 7){
+
+        }else if(dayCounter == 12){
+            
         }
     }
 
